@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Before / After Slider</title>
+	<style>
+		body {
+			background: #f0f0f0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			margin: 0;
+		}
+
+		.container {
+			position: relative;
+			width: 600px;
+			max-width: 90%;
+			overflow: hidden;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+
+		.container img {
+			width: 100%;
+			display: block;
+		}
+
+		.after {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 50%;
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.after img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+		}
+
+		.slider {
+			position: absolute;
+			top: 0;
+			left: 50%;
+			width: 4px;
+			height: 100%;
+			background: #fff;
+			border-left: 2px solid #000;
+			border-right: 2px solid #000;
+			cursor: ew-resize;
+			z-index: 2;
+			transition: background 0.2s;
+		}
+
+		.slider:hover {
+			background: #ddd;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container" id="sliderContainer">
+		<img src="https://i.imgur.com/7WGN26w.png" alt="Before">
+		<div class="after">
+			<img src="https://i.imgur.com/j3NBAZN.png" alt="After">
+    </div>
+			<div class="slider" id="slider"></div>
+		</div>
+
+		<script>
+			const container = document.getElementById('sliderContainer');
+    const after = container.querySelector('.after');
+    const slider = document.getElementById('slider');
+
+    let isDown = false;
+
+    const moveSlider = (x) => {
+      const rect = container.getBoundingClientRect();
+      let position = x - rect.left;
+      if (position < 0) position = 0;
+      if (position > rect.width) position = rect.width;
+      after.style.width = position + 'px';
+      slider.style.left = position + 'px';
+    };
+
+    slider.addEventListener('mousedown', () => (isDown = true));
+    window.addEventListener('mouseup', () => (isDown = false));
+    window.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      moveSlider(e.clientX);
+    });
+
+    // Touch support
+    slider.addEventListener('touchstart', () => (isDown = true));
+    window.addEventListener('touchend', () => (isDown = false));
+    window.addEventListener('touchmove', (e) => {
+      if (!isDown) return;
+      moveSlider(e.touches[0].clientX);
+    });
+		</script>
+</body>
+
+</html>
