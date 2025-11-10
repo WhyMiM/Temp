@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Temp</title>
 <style>
-<!-- -->
   body::-webkit-scrollbar {width: 10px; background-color: transparent; box-shadow: inset 1px 0px 0px 0px #00000029}
   body::-webkit-scrollbar-thumb {border-radius: 0px; border: none; background-color: #bababa}
   body::-webkit-scrollbar-thumb:hover {background-color: #afafaf}
-  body::-webkit-scrollbar-thumb:active {background-color: #9d9d9d}
-
+  body::-webkit-scrollbar-thumb:active {background-color: #9d9d9}
   body {
     margin: 0;
     background-color: #222;
@@ -19,34 +17,51 @@
     display: flex;
     flex-direction: column;
   }
-
   .page {flex: 1; display: flex; flex-direction: column; justify-content: space-between;}
   header, footer {width: 100%; background-color: #333; color: #fff; text-align: center;}
   footer {margin-top: auto; padding: 1rem 0;}
 
+  /* BEFORE/AFTER SLIDER */
   .ba-slider {
     position: relative;
     display: flex;
     width: 100%;
-    max-width: 100%;
-    aspect-ratio: 3 / 2;
     overflow: hidden;
     cursor: pointer;
     user-select: none;
-    margin: 0px;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: #111;
   }
 
   .slider-group {overflow: hidden; height: 0;}
   .slider-group .ba-slider:not(:last-child) {border-bottom: 2px solid #5f5f5f}
-  .img-wrapper {position: absolute; width: 100%; height: 100%; overflow: hidden;}
+
+  .img-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .img-wrapper:nth-child(2) {clip-path: inset(0px 0px 0px 50%);}
-  .img-wrapper img {width: 100%; height: 100%; object-fit: cover;}
+
+  .img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
 
   .line {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    width: 6px;
+    width: 4px;
     height: 100%;
     background-color: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
@@ -91,91 +106,76 @@
   input {display: none;}
 
 details {
-  display: block;
-  margin: 1rem 1rem;
-  max-width: 50rem;
-  background-color: RGB(50,50,50);
-  border: 2px solid #5f5f5f;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-  transform-origin: center;
-  color: #fff;
+    display: block;
+    margin: 1rem 1rem;
+    max-width: 100%; /* initial max-width */
+    background-color: RGB(50,50,50);
+    border: 2px solid #5f5f5f;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    transform-origin: center;
+    color: #fff;
 }
 
-summary {
-  user-select: none;
-  cursor: pointer;
-  color: #fff;
-  font-weight: bold;
-  text-align: center;
-  padding: 8px 0px 8px 0px;
-  background-color: rgba(55,55,55,0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 4px;
-  box-shadow:inset 0 10px 20px rgba(255,255,255,0.3),0 8px 20px rgba(0,0,0,0.4);
-  transition: all 0.1s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  width: 100%;
-  box-sizing: border-box;
-}
+  #sliderSpoiler {
+    user-select: none;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px 0px;
+    background-color: rgba(55,55,55,0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 4px;
+    box-shadow: inset 0 10px 20px rgba(255,255,255,0.3),0 8px 20px rgba(0,0,0,0.4);
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    width: 100%;
+    box-sizing: border-box;
+  }
 
+  #sliderSpoiler:hover {
+    background-color: rgba(55,55,55,0.3);
+    box-shadow:inset 0 12px 22px rgba(255,255,255,0.4), 0 10px 25px rgba(0,0,0,0.4);
+  }
 
+  #sliderSpoiler:active {
+    box-shadow:inset 0 10px 20px rgba(255,255,255,0.3);
+  }
 
-summary:hover {
-  background-color: rgba(55,55,55,0.3);
-  box-shadow:inset 0 12px 22px rgba(255,255,255,0.4), 0 10px 25px rgba(0,0,0,0.4);
-}
+  details[open] #sliderSpoiler {border-bottom-left-radius: 0; border-bottom-right-radius: 0}
+  #sliderSpoiler::-webkit-details-marker {display: none;}
+  #sliderSpoiler::marker {content: none;}
+  .slider-group {
+    transform-origin: top;
+    will-change: transform, opacity;
+    transition: none;
+  }
 
-summary:active {
-  box-shadow:inset 0 10px 20px rgba(255,255,255,0.3);
-}
-
-
-details[open] summary {border-bottom-left-radius: 0; border-bottom-right-radius: 0}
-summary::-webkit-details-marker {display: none;}
-summary::marker {content: none;}
-.slider-group {
-  transform-origin: top;
-  will-change: transform, opacity;
-  transition: none; /* animations handled in JS */
-}
-
-.ba-slider {
-  will-change: clip-path, left;
-}
-
-.handle, .line {
-  will-change: transform;
-}
-
+  .handle, .line {
+    will-change: transform;
+  }
 </style>
 </head>
 <body>
 
 <div class="page">
-  <header>
-    <h1>Entities by MiM</h1>
-  </header>
+  <header><h1></h1></header>
 
   <details>
-    <summary>Collapse</summary>
+    <summary id="sliderSpoiler">Show more</summary>
     <div class="slider-group">
       <div class="ba-slider" data-before="https://picsum.photos/id/1015/800/600" data-after="https://picsum.photos/id/1016/800/600"></div>
       <div class="ba-slider" data-before="https://picsum.photos/id/1020/800/600" data-after="https://picsum.photos/id/1021/800/600"></div>
-      <div class="ba-slider" data-before="https://picsum.photos/id/1025/800/600" data-after="https://picsum.photos/id/1026/800/600"></div>
-
+      <div class="ba-slider" data-before="https://picsum.photos/id/1025/800/600" data-after="https://picsum.photos/id/4/800/600"></div>
     </div>
   </details>
 
-  <footer>
-    <p>Thanks to friends below for helping me with testing c.c</p>
-    <p>sockii, PNCKA_CTPOU, cris</p>
-  </footer>
+  <footer><p></p><p></p></footer>
 </div>
-
 
 <script>
 const sliderClickSpeed = 0.2, sliderDragSpeed = 0.5;
@@ -187,21 +187,31 @@ class BeforeAfterSlider {
     this.container = container;
     const beforeURL = container.dataset.before, afterURL = container.dataset.after;
 
-    container.innerHTML = `
+    this.container.innerHTML = `
       <div class="img-wrapper"><img src="${beforeURL}" alt="Before"></div>
       <div class="img-wrapper"><img src="${afterURL}" alt="After"></div>
       <div class="line"></div><div class="handle"></div>
     `;
 
-
     this.handle = container.querySelector('.handle');
     this.line = container.querySelector('.line');
     this.imgAfter = container.querySelector('.img-wrapper:nth-of-type(2)');
+    this.imgBefore = container.querySelector('.img-wrapper:nth-of-type(1) img');
+    this.imgAfterImg = this.imgAfter.querySelector('img');
 
     this.targetValue = 50;
     this.currentValue = this.targetValue;
     this.isDragging = false;
     this.mouseDown = false;
+
+    // Wait until images are loaded to set aspect ratio
+    const setAspectRatio = () => {
+      const w = this.imgBefore.naturalWidth;
+      const h = this.imgBefore.naturalHeight;
+      if (w && h) this.container.style.aspectRatio = `${w} / ${h}`;
+    };
+    if (this.imgBefore.complete) setAspectRatio();
+    else this.imgBefore.onload = setAspectRatio;
 
     this.addEventListeners();
     this.updateVisuals();
@@ -241,11 +251,17 @@ class BeforeAfterSlider {
 
 document.querySelectorAll('.ba-slider').forEach(slider => new BeforeAfterSlider(slider));
 
-/* DETAILS TOGGLE ANIMATION */
+
+
+
+
+
+
+
 document.querySelectorAll('details').forEach(detail => {
   const content = detail.querySelector('.slider-group');
-  const summary = detail.querySelector('summary');
-  if (!content || !summary) return;
+  const sliderSpoiler = detail.querySelector('#sliderSpoiler');
+  if (!content || !sliderSpoiler) return;
 
   let animating = false;
   const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -260,29 +276,50 @@ document.querySelectorAll('details').forEach(detail => {
     requestAnimationFrame(step);
   });
 
+  const getMaxImageWidth = () => {
+    const images = detail.querySelectorAll('.ba-slider img');
+    let maxWidth = 0;
+    images.forEach(img => {
+      if (img.naturalWidth > maxWidth) maxWidth = img.naturalWidth;
+    });
+    return maxWidth;
+  };
+
   const updateOpenStyles = () => {
     if (!detail.open) return;
     const vw = window.innerWidth;
-    const width = 0.9 * vw;
+    const maxImageWidth = getMaxImageWidth();
+    const width = Math.min(0.9 * vw, maxImageWidth);
     detail.style.width = width + 'px';
   };
 
-  // Initial state
+  // Clone the sliderSpoiler to create a bottom collapse button
+  let bottomCollapse = sliderSpoiler.cloneNode(true);
+  bottomCollapse.textContent = 'Collapse';
+  bottomCollapse.style.borderRadius = '0px';
+  bottomCollapse.addEventListener('click', e => {
+    e.preventDefault();
+    if (!animating) sliderSpoiler.click(); // trigger collapse
+  });
+
+  // Initialize states
   if (detail.open) {
     updateOpenStyles();
-    summary.textContent = 'Collapse';
+    sliderSpoiler.textContent = 'Collapse';
     content.style.height = content.scrollHeight + 'px';
     detail.style.borderBottomLeftRadius = '0px';
     detail.style.borderBottomRightRadius = '0px';
+    if (!content.contains(bottomCollapse)) content.appendChild(bottomCollapse);
   } else {
-    summary.textContent = 'Show more';
+    sliderSpoiler.textContent = 'Show more';
     detail.style.width = '120px';
     content.style.height = '0px';
     detail.style.borderBottomLeftRadius = '8px';
     detail.style.borderBottomRightRadius = '8px';
+    if (content.contains(bottomCollapse)) content.removeChild(bottomCollapse);
   }
 
-  summary.addEventListener('click', async (e) => {
+  sliderSpoiler.addEventListener('click', async e => {
     e.preventDefault();
     if (animating) return;
     animating = true;
@@ -290,13 +327,14 @@ document.querySelectorAll('details').forEach(detail => {
     const startWidth = detail.offsetWidth;
     const startMargin = parseFloat(getComputedStyle(detail).marginLeft);
     const vw = window.innerWidth;
-    const targetWidth = 0.9 * vw;
+    const maxImageWidth = getMaxImageWidth();
+    const targetWidth = Math.min(0.9 * vw, maxImageWidth);
     const targetMargin = 0.05 * vw;
 
     if (detail.open) {
       const startHeight = content.scrollHeight;
-      await animate(spoilerHeightSpeed*1000, t => content.style.height = (startHeight * (1 - t)) + 'px');
-      await animate(spoilerWidthSpeed*1000, t => {
+      await animate(spoilerHeightSpeed * 1000, t => content.style.height = (startHeight * (1 - t)) + 'px');
+      await animate(spoilerWidthSpeed * 1000, t => {
         detail.style.width = startWidth + (120 - startWidth) * t + 'px';
         detail.style.marginLeft = startMargin + (16 - startMargin) * t + 'px';
         detail.style.marginRight = startMargin + (16 - startMargin) * t + 'px';
@@ -304,11 +342,12 @@ document.querySelectorAll('details').forEach(detail => {
         detail.style.borderBottomRightRadius = `${8 * t}px`;
       });
       detail.open = false;
-      summary.textContent = 'Show more';
+      sliderSpoiler.textContent = 'Show more';
+      if (content.contains(bottomCollapse)) content.removeChild(bottomCollapse);
     } else {
       detail.open = true;
-      summary.textContent = 'Collapse';
-      await animate(spoilerWidthSpeed*1000, t => {
+      sliderSpoiler.textContent = 'Collapse';
+      await animate(spoilerWidthSpeed * 1000, t => {
         detail.style.width = startWidth + (targetWidth - startWidth) * t + 'px';
         detail.style.marginRight = startMargin + (targetMargin - startMargin) * t + 'px';
         detail.style.borderBottomLeftRadius = `${8 * (1 - t)}px`;
@@ -316,17 +355,18 @@ document.querySelectorAll('details').forEach(detail => {
       });
       const targetHeight = content.scrollHeight;
       content.style.height = '0px';
-      await animate(spoilerHeightSpeed*1000, t => content.style.height = (targetHeight * t) + 'px');
+      await animate(spoilerHeightSpeed * 1000, t => content.style.height = (targetHeight * t) + 'px');
       content.style.height = 'auto';
+      if (!content.contains(bottomCollapse)) content.appendChild(bottomCollapse);
     }
 
     animating = false;
   });
 
-window.addEventListener('resize', updateOpenStyles);
+  window.addEventListener('resize', updateOpenStyles);
 });
-</script>
 
+</script>
 
 </body>
 </html>
