@@ -1,359 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
 <title>Test</title>
-
 <style>
-:root {
---BASpoilerPadding: 3px;
---BASpoilerWidth: 100px;
---BASpoilerHeight: 32px;
-}
 
-body {margin: 0; background-color: #222}
 
-/*---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------*/
-.BASpoiler {
+body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--HorizontalPadding); padding-right: var(--HorizontalPadding)}
+/*---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------*/
+#HeaderContainer {
+  user-select: none;
   overflow: hidden;
-  margin: 1rem;
-  padding: var(--BASpoilerPadding);
-  height: var(--BASpoilerHeight);
-  max-height: fit-content;
-  background: tomato;
-  position: relative;
-  border-radius: 3px;
-}
-
-.BASpoilerToggle, .BASpoilerCollapse {
-
-  white-space: nowrap;
-  font-family: "Segoe UI";
-  font-size: 16px;
-  font-weight: 500;
-  color: white;
-  cursor: pointer;
-  position: relative;
-  width: 100%;
-  height: var(--BASpoilerHeight);
-  background: rgb(80, 80, 80);
-  border: 1px solid #666;
-  border-radius: 0.2rem;
-  transition: background-color 0.1s;
-  line-height: 1;
-}
-
-.BASpoilerToggle:hover, .BASpoilerCollapse:hover {background: rgb(100, 100, 100)}
-.BASpoilerToggle:active, .BASpoilerCollapse:active {background: rgb(40, 40, 40)}
-.BASpoilerToggle {
-  z-index: 1;
-}
-.BASpoilerCollapse {
-  margin-top: var(--BASpoilerPadding);
-}
-/*---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------*/
-
-
-/*----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------*/
-.BASlider {
-  user-select: none; cursor: pointer; overflow: hidden;
-  display: flex; justify-content: center; align-items: center;
-  position: relative; width: 100%; background-color: #111;
-}
-.img-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 100%
-}
-.img-wrapper:before {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  border: 2px solid RGBA(190,190,190, 0.5);
-  outline: 4px solid RGBA(90,90,90, 0.1);
-  outline-offset: -4px;
-}
-.img-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.line {
-  position:absolute; left:50%;
-  transform:translateX(-50%);
-  width: 3px; height:100%;
-  background-color:rgba(255,255,255,0.2);
-  box-shadow:0 4px 15px rgba(0,0,0,0.5);
-  z-index:2;
-}
-.handle {
-  z-index:3; display:flex; justify-content:center; align-items:center;
-  position:absolute; top:50%; left: 50%;
-  transform:translate(-50%,-50%);
-  width: 2rem; height: 2rem;
-  backdrop-filter:blur(20px);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius:50%;
-  box-shadow: inset 0 10px 20px rgba(255,255,255,0.6), 0 8px 20px rgba(0,0,0,0.2);
-}
-.handle::before, .handle::after {
-  content: '';
-  display:block; width:8px; height:8px;
-  border-top: 2px solid RGBA(255,255,255,0.5);
-  border-right: 2px solid RGBA(255,255,255,0.5);
-}
-.handle::before {transform: rotate(-135deg)}
-.handle::after {transform: rotate(45deg)}
-/*----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------*/
-
-.BASliderWrapper {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  margin-left: calc(-1 * var(--HorizontalPadding));
+  width: calc(100% + (var(--HorizontalPadding) * 2));
   box-sizing: border-box;
-  position: relative;
-  width: 100%;
-  margin-top: var(--BASpoilerPadding);
-  background: transparent;
+  border-style: solid;
 }
 
-.BASliderWrapper[data-open="true"] {padding-top: var(--BASpoilerSpacing)} /* maybe reimplement this?*/
-.BASliderWrapper .BASlider {margin-bottom: var(--BASpoilerSpacing)} /* maybe reimplement this?*/
+#HeaderCarousel {
+  background-color: #31557d;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#HeaderCarouselTrack {
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  user-drag: none;
+  user-select: none;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 2s;
+  display: flex;
+  position: absolute;
+  height: 100%;
+  visibility: hidden;
+  align-items: center; 
+}
+
+#HeaderCarouselTrack img {
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+  -ms-user-drag: none;
+  user-drag: none;
+  user-select: none;
+  flex-shrink: 0;
+  object-fit: cover;
+  height: 90%;
+}
+
+
+#HeaderTextContainer {
+  z-index: 1;
+  box-sizing: border-box;
+  position: absolute;
+  margin: 0px;
+  opacity: 0;
+  padding: 15px;
+  padding-top: 10px;
+  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  box-shadow: inset 0px 5px 10px rgba(90, 140, 190, 1),
+             inset 0px -5px 10px rgba(0, 0, 0, 0.4);
+  border: 5px solid rgba(90, 140, 190,0.1);
+  outline: 3px solid rgba(255, 255, 255,0.1);
+  outline-offset: -1px;
+}
+
+
+#HeaderText, #HeaderSubText {
+  user-select: none;
+  -webkit-user-drag: none;
+  margin: 0;
+  font-family: "Rubik";
+  font-weight: 500;
+  color: RGBA(255,255,255, 1);
+  text-align: center;
+}
+
+#HeaderSubText a {color: #78c7ff; text-decoration: none} #HeaderSubText a:hover {text-decoration: underline}
+
+@keyframes fadeslide {0% {opacity: 0; transform: translateY(5px)} 100% {opacity: 1; transform: translateY(-5px)}}
 
 
 </style>
 </head>
-
 <body>
+<div id="HeaderContainer">
+  <div id="HeaderTextContainer">
+    <p id="HeaderText">Entities by MiM</p>
+    <p id="HeaderSubText">for the <a target="_blank" draggable="false" href="https://ddnet.org">DDNet</a> client</p>
+  </div>
+  <div id="HeaderCarousel">
+    <div id="HeaderCarouselTrack">
+      <img src=""/>
+      <img src="https://i.imgur.com/5IJ6nFb.png"/>
+      <img src="https://i.imgur.com/MLwmQ8J.png"/>
+      <img src="https://i.imgur.com/fflP2aU.png"/>
+      <img src="https://i.imgur.com/WR1XIHA.png"/>
+      <img src="https://i.imgur.com/5IJ6nFb.png"/>
+      <img src="https://i.imgur.com/MLwmQ8J.png"/>
+      <img src="https://i.imgur.com/fflP2aU.png"/>
+      <img src="https://i.imgur.com/WR1XIHA.png"/>
+      <img src="https://i.imgur.com/5IJ6nFb.png"/>
+      <img src="https://i.imgur.com/MLwmQ8J.png"/>
+      <img src="https://i.imgur.com/fflP2aU.png"/>
+      <img src="https://i.imgur.com/WR1XIHA.png"/>
 
-<!-- BASpoiler 1 -->
-<div class="BASpoiler">
-  <button class="BASpoilerToggle">Show more</button>
-    <div class="BASliderWrapper" data-open="true">
-      <div class="BASlider" data-dimensions="800x600" data-before="https://picsum.photos/id/1015/800/600" data-after="https://picsum.photos/id/1016/800/600"></div>
-      <div class="BASlider" data-dimensions="800x600" data-before="https://picsum.photos/id/1020/800/600" data-after="https://picsum.photos/id/1021/800/600"></div>
-      <button class="BASpoilerCollapse" tabindex="-1">Collapse</button>
     </div>
+  </div>
 </div>
 
 <script>
-//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
-class BASpoilerAnimator {
-  constructor(element, steps) {
-    this.element = element;
-    this.steps = steps;
-    this.index = 0;
-    this.direction = 1;
-    this.progress = 0;
-    this.running = false;
-    this.startTime = null;
-    this.rafId = null;
-  }
 
-  getStepValues(step) {
-    if (step.property === "heightAuto") {
-      const natural = step.target.scrollHeight;   // measure natural height
-      return { start: step.start, end: natural };
-    }
-    return { start: step.start, end: step.end };
-  }
+function GetZoomFactor() {return window.devicePixelRatio || 1};
+const root = document.documentElement.style;
+const zoom = 1 / GetZoomFactor();
+//--------------------------------------------------------------------- Header Carousel ---------------------------------------------------------------------//
+let CarouselPosition = 0;
+let PrevTimestamp = null;
+let CarouselImageWidths = [];
 
-  step(timestamp) {
-    let step = this.steps[this.index];
-
-    // replace heightAuto with dynamic numbers
-    let { start, end } = this.getStepValues(step);
-
-    if (this.startTime === null) this.startTime = timestamp;
-    const frameDelta = timestamp - this.startTime;
-    this.startTime = timestamp;
-
-    const delta = Math.min(frameDelta / step.duration, 1) * this.direction;
-    this.progress += delta;
-
-    this.progress = Math.min(1, Math.max(0, this.progress));
-    const eased = step.easing(this.progress);
-    const value = start + (end - start) * eased;
-
-    const cssProp = step.property === "heightAuto" ? "height" : step.property;
-    this.element.style[cssProp] = value + "px";
-
-    if ((this.progress === 1 && this.direction === 1) ||
-        (this.progress === 0 && this.direction === -1)) {
-      this.index += this.direction;
-      if (this.index < 0 || this.index >= this.steps.length) {
-        this.index = Math.max(0, Math.min(this.index, this.steps.length - 1));
-        this.running = false;
-        return;
-      }
-      this.progress = this.direction === 1 ? 0 : 1;
-      this.startTime = null;
-    }
-
-    this.rafId = requestAnimationFrame(this.step.bind(this));
-  }
-
-  playOrReverse() {
-    const atStart = this.index === 0 && this.progress === 0;
-    const atEnd   = this.index === this.steps.length - 1 && this.progress === 1;
-
-    this.direction = atStart ? 1 : atEnd ? -1 : -this.direction;
-
-    if (!this.running) this.play();
-  }
-
-  play() {
-    if (this.running) return;
-    if (this.rafId) cancelAnimationFrame(this.rafId);
-    this.running = true;
-    this.startTime = null;
-    this.rafId = requestAnimationFrame(this.step.bind(this));
-  }
-}
-//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
-
-
-//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
-const sliderClickSpeed = 0.2, sliderDragSpeed = 0.5;
-
-class BeforeAfterSlider {
-  constructor(container) {
-    this.container = container;
-    const beforeURL = container.dataset.before;
-    const afterURL = container.dataset.after;
-
-    this.container.innerHTML = `
-    <div class="img-wrapper"><img src="${beforeURL}" alt="Before"></div>
-    <div class="img-wrapper"><img src="${afterURL}" alt="After"></div>
-    <div class="line"></div><div class="handle"></div>`;
-
-    const dims = container.dataset.dimensions.split('x');
-    this.container.style.maxWidth = parseInt(dims[0]) + "px";
-    this.container.style.aspectRatio = `${parseInt(dims[0])} / ${parseInt(dims[1])}`;
-    this.handle = container.querySelector('.handle');
-    this.line = container.querySelector('.line');
-    this.imgAfter = container.querySelector('.img-wrapper:nth-of-type(2)');
-    this.imgBefore = container.querySelector('.img-wrapper:nth-of-type(1) img');
-
-    this.targetValue = 50;
-    this.currentValue = this.targetValue;
-    this.isDragging = false;
-    this.mouseDown = false;
-    this.animating = false;
-
-    this.addEventListeners();
-    this.updateVisuals();
-  }
-
-  addEventListeners() {
-    let dragDelayTimeout;
-
-    this.container.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return;
-      e.preventDefault();
-      const rect = this.container.getBoundingClientRect();
-      let percent = ((e.clientX - rect.left) / rect.width) * 100;
-      this.targetValue = Math.max(0, Math.min(100, percent));
-      this.isDragging = false;
-      this.mouseDown = true;
-      clearTimeout(dragDelayTimeout);
-      dragDelayTimeout = setTimeout(() => this.mouseDown && (this.isDragging = true), 150);
-      this.startAnimation();
-    });
-
-    window.addEventListener('mouseup', () => {
-      this.mouseDown = false; clearTimeout(dragDelayTimeout); this.isDragging = false;
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (!this.mouseDown) return;
-      const rect = this.container.getBoundingClientRect();
-      let percent = ((e.clientX - rect.left) / rect.width) * 100;
-      this.targetValue = Math.max(0, Math.min(100, percent));
-      this.startAnimation();
-    });
-  }
-
-  startAnimation() {
-    if (!this.animating) {
-      this.animating = true;
-      requestAnimationFrame(() => this.updateVisuals());
-    }
-  }
-
-  updateVisuals() {
-    const speed = this.isDragging ? sliderDragSpeed : sliderClickSpeed;
-    this.currentValue += (this.targetValue - this.currentValue) * speed;
-    this.line.style.left = `${this.currentValue}%`;
-    this.handle.style.left = `${this.currentValue}%`;
-    this.imgAfter.style.clipPath = `inset(0px 0px 0px ${this.currentValue}%)`;
-
-    if (Math.abs(this.currentValue - this.targetValue) > 0.1) {
-      requestAnimationFrame(() => this.updateVisuals());
-    } else {
-      this.currentValue = this.targetValue; this.animating = false;
-    }
-  }
-}
-//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
-
-
-//----------------------------------------------------------------------- Setup stuff -----------------------------------------------------------------------//
-
-// Spoiler
-document.querySelectorAll(".BASpoiler").forEach(spoiler => {
-  const Toggle = spoiler.querySelector(".BASpoilerToggle");
-  const Collapse = spoiler.querySelector(".BASpoilerCollapse");
-  const wrapper = spoiler.querySelector(".BASliderWrapper");
-
-
-  const BaseSpoilerWidth = parseInt(getComputedStyle(spoiler).getPropertyValue('--BASpoilerWidth'));
-  const BaseSpoilerHeight = parseInt(getComputedStyle(spoiler).getPropertyValue('--BASpoilerHeight'));
-  const SpoilerPadding = parseInt(getComputedStyle(spoiler).getPropertyValue('--BASpoilerPadding'));
+const HeaderContainer = document.getElementById("HeaderContainer");
+const HeaderCarouselTrack = document.getElementById("HeaderCarouselTrack");
+const HeaderTextContainer = document.getElementById("HeaderTextContainer");
+const HeaderText = document.getElementById("HeaderText");
+const HeaderSubText = document.getElementById("HeaderSubText");
+let CarouselImages = Array.from(HeaderCarouselTrack.children);
 
 
 
+const HeaderConfig = {
+  Height: 220,
+  BorderSize: 8,
+  BackgroundColor: "#31557d",
+  BorderColor: "RGBA(255, 255, 255, 0.1)",
+  TextAnimation: "1.5s",
+  TextSize: 52,
+  SubTextSize: 14,
 
-  const sliders = Array.from(wrapper.querySelectorAll(".BASlider"));
-  sliders.forEach(slider=>new BeforeAfterSlider(slider));
-  const maxWidth  = Math.max(...sliders.map(s => Number(s.dataset.dimensions.split('x')[0])));
+  CarouselSpeed: 30,
+  CarouselImageSpacing: 16,
 
-  const totalHeight = sliders.map(s => Number(s.dataset.dimensions.split('x')[1])).reduce((a, b) => a + b, 0) + (BaseSpoilerHeight*2) + (SpoilerPadding*2);
+  CarouselImageBorderSize: 6,
+  CarouselImageBorderRadius: 22,
+  CarouselImageBorderColor: "RGBA(90, 140, 190, 0.1)",
+  CarouselImageOutlineSize: 3,
+  CarouselImageOutlineOffset: -1,
+  CarouselImageOutlineColor: "RGBA(255, 255, 255, 0.1)",
+
+  CarouselImageShadow1X: 2,
+  CarouselImageShadow1Y: -2,
+  CarouselImageShadow1Blur: 4,
+  CarouselImageShadow1Color: "RGBA(90, 140, 190, 1)",
+  CarouselImageShadow2X: -2,
+  CarouselImageShadow2Y: 4,
+  CarouselImageShadow2Blur: 4,
+  CarouselImageShadow2Color: "RGBA(0, 0, 0, 1)",
+};
 
 
 
+const RootHeaderVars = {
+"--BackgroundColor": "#222",
+"--HorizontalPadding": "22px",
+
+"--HeaderHeight": `${HeaderConfig.Height * zoom}px`,
+"--HeaderBorderSize": `${HeaderConfig.BorderSize / zoom}px 0`,
+
+"--HeaderTextSize": `${HeaderConfig.TextSize / zoom}px 0`,
+"--HeaderSubTextSize": `${HeaderConfig.SubTextSize / zoom}px 0`,
 
 
-  spoiler.style.maxWidth = BaseSpoilerWidth+"px";
-  wrapper.maxSliderWidth = maxWidth;
+"--CImgSpacing": `${HeaderConfig.CarouselImageSpacing * zoom}px`,
+"--CImgBorderSize": `${HeaderConfig.CarouselImageBorderSize * zoom}px`,
+"--CImgBorderRadius": `${HeaderConfig.CarouselImageBorderRadius * zoom}px`,
+"--CImgBorderColor": `${HeaderConfig.CarouselImageBorderColor}`,
+"--CImgOutlineSize": `${HeaderConfig.CarouselImageOutlineSize * zoom}px`,
+"--CImgOutlineOffset": `${HeaderConfig.CarouselImageOutlineOffset * zoom}px`,
+"--CImgOutlineColor": `${HeaderConfig.CarouselImageOutlineColor}`,
+"--CImgShadow1X": `${HeaderConfig.CarouselImageShadow1X * zoom}px`,
+"--CImgShadow1Y": `${HeaderConfig.CarouselImageShadow1Y * zoom}px`,
+"--CImgShadow1Blur": `${HeaderConfig.CarouselImageShadow1Blur * zoom}px`,
+"--CImgShadow1Color": `${HeaderConfig.CarouselImageShadow1Color}`,
+"--CImgShadow2X": `${HeaderConfig.CarouselImageShadow2X * zoom}px`,
+"--CImgShadow2Y": `${HeaderConfig.CarouselImageShadow2Y * zoom}px`,
+"--CImgShadow2Blur": `${HeaderConfig.CarouselImageShadow2Blur * zoom}px`,
+"--CImgShadow2Color": `${HeaderConfig.CarouselImageShadow2Color}`,
+}; for (const key in RootHeaderVars) {root.setProperty(key, RootHeaderVars[key])};
 
 
-
-
-
-
-  const Easings = {easeInOutQuad: t=>t<0.5?2*t*t:-1+(4-2*t)*t, easeInOutCubic: t=>t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1};
-  const SpoilerAnimation = new BASpoilerAnimator(spoiler, [
-    {property: "maxWidth", start: BaseSpoilerWidth, end: wrapper.maxSliderWidth, duration: 250, easing: Easings.easeInOutQuad},
-    {property:   "height", start: BaseSpoilerHeight, end: totalHeight, duration: 400, easing: Easings.easeInOutCubic}
-  ]);
-  Toggle.addEventListener("click", () => SpoilerAnimation.playOrReverse());
-  Collapse.addEventListener("click", () => { SpoilerAnimation.direction = -1; SpoilerAnimation.play()});
+CarouselImages.forEach(img => {
+  img.style.setProperty("border", `var(--CImgBorderSize) solid var(--CImgBorderColor)`);
+  img.style.setProperty("border-radius", `var(--CImgBorderRadius)`);
+  img.style.setProperty("outline", `var(--CImgOutlineSize) solid var(--CImgOutlineColor)`);
+  img.style.setProperty("outline-offset", `var(--CImgOutlineOffset)`);
+  img.style.setProperty("filter", `drop-shadow(var(--CImgShadow1X) var(--CImgShadow1Y) var(--CImgShadow1Blur) var(--CImgShadow1Color))
+                                       drop-shadow(var(--CImgShadow2X) var(--CImgShadow2Y) var(--CImgShadow2Blur) var(--CImgShadow2Color))`);
 });
 
 
-window.addEventListener('resize', () => {
-  const sliders = spoiler.querySelectorAll('.BASlider');
-  const totalHeight = Array.from(sliders)
-    .map(s => Number(s.dataset.dimensions.split('x')[1]))
-    .reduce((a,b) => a+b, 0) + (BaseSpoilerHeight*2) + (SpoilerPadding*2);
-  spoiler.style.height = totalHeight + 'px';
+
+
+
+HeaderContainer.style.setProperty("height", `var(--HeaderHeight)`);
+HeaderContainer.style.setProperty("border-width", `var(--HeaderBorderSize)`);
+HeaderContainer.style.setProperty("border-color", `${HeaderConfig.BorderColor}`);
+HeaderContainer.style.setProperty("background-color", `${HeaderConfig.BackgroundColor}`);
+
+HeaderText.style.setProperty("font-size", `var(--HeaderTextSize)`);
+HeaderSubText.style.setProperty("font-size", `var(--HeaderSubTextSize)`);
+
+HeaderCarouselTrack.style.setProperty("gap", `var(--CImgSpacing)`);
+
+
+
+
+
+function updateSizes() {
+  const zoom = 1 / GetZoomFactor();
+
+  root.setProperty("--HeaderHeight", `${HeaderConfig.Height * zoom}px`);
+  root.setProperty("--HeaderBorderSize", `${HeaderConfig.BorderSize * zoom}px 0`);
+
+  root.setProperty("--HeaderTextSize", `${HeaderConfig.TextSize * zoom}px`);
+  root.setProperty("--HeaderSubTextSize", `${HeaderConfig.SubTextSize * zoom}px`);
+
+  root.setProperty("--CImgSpacing", `${HeaderConfig.CarouselImageSpacing * zoom}px`);
+  root.setProperty("--CImgBorderSize", `${HeaderConfig.CarouselImageBorderSize * zoom}px`);
+  root.setProperty("--CImgBorderRadius", `${HeaderConfig.CarouselImageBorderRadius * zoom}px`);
+  root.setProperty("--CImgOutlineSize", `${HeaderConfig.CarouselImageOutlineSize * zoom}px`);
+  root.setProperty("--CImgOutlineOffset", `${HeaderConfig.CarouselImageOutlineOffset * zoom}px`);
+  root.setProperty("--CImgShadow1X", `${HeaderConfig.CarouselImageShadow1X * zoom}px`);
+  root.setProperty("--CImgShadow1Y", `${HeaderConfig.CarouselImageShadow1Y * zoom}px`);
+  root.setProperty("--CImgShadow1Blur", `${HeaderConfig.CarouselImageShadow1Blur * zoom}px`);
+  root.setProperty("--CImgShadow2X", `${HeaderConfig.CarouselImageShadow2X * zoom}px`);
+  root.setProperty("--CImgShadow2Y", `${HeaderConfig.CarouselImageShadow2Y * zoom}px`);
+  root.setProperty("--CImgShadow2Blur", `${HeaderConfig.CarouselImageShadow2Blur * zoom}px`);
+
+  CarouselImageWidths = CarouselImages.map(img => img.getBoundingClientRect().width + (HeaderConfig.CarouselImageSpacing * zoom));
+}
+
+
+
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) PrevTimestamp = null;
 });
+
+function animateCarousel(timestamp) {
+    if (!PrevTimestamp) PrevTimestamp = timestamp;
+
+    let deltaSeconds = (timestamp - PrevTimestamp) / 1000;
+    deltaSeconds = Math.min(deltaSeconds, 0.05);
+
+    PrevTimestamp = timestamp;
+    const zoom = GetZoomFactor();
+    CarouselPosition -= HeaderConfig.CarouselSpeed * deltaSeconds / zoom;
+
+    if (-CarouselPosition >= CarouselImageWidths[0]) {
+        CarouselPosition += CarouselImageWidths[0];
+        HeaderCarouselTrack.appendChild(CarouselImages[0]);
+        CarouselImages.push(CarouselImages.shift());
+        updateSizes()
+    }
+
+    HeaderCarouselTrack.style.transform = `translate3d(${CarouselPosition}px, 0, 0)`;
+    requestAnimationFrame(animateCarousel);
+}
+
+// Wait for all images to load
+function imagesLoaded(imgs) {
+    return Promise.all(
+        imgs.map(img => img.complete ? Promise.resolve() :
+            new Promise(resolve => img.onload = resolve)
+        )
+    );
+}
+
+// Initial setup
+imagesLoaded(CarouselImages).then(() => {
+  HeaderCarouselTrack.style.visibility = "visible";
+  requestAnimationFrame(() => {
+    HeaderCarouselTrack.style.opacity = "1";
+    setTimeout(() => {
+
+      void HeaderTextContainer.offsetWidth;
+      HeaderTextContainer.style.animation = `fadeslide ${HeaderConfig.TextAnimation} forwards`;
+    }, 1300); // match carousel opacity transition duration
+  });
+
+  updateSizes();
+  requestAnimationFrame(animateCarousel);
+});
+
+
+
+// Update on resize
+window.addEventListener("resize", () => {
+    requestAnimationFrame(() => {
+        updateSizes();
+    });
+});
+
 </script>
-
 </body>
 </html>
