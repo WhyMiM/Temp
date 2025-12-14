@@ -3,14 +3,29 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+<!-- MiM Note: add site visits tracking and local storage fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
 <title>Test</title>
+<script>document.documentElement.style.setProperty('--zoom', (1/(window.devicePixelRatio||1)))</script>
 <style>
+:root {
+--BackgroundColor: #222; --HorizontalPadding: 22px;
 
+--BASpoilerWidth: 100px;
+--BASpoilerHeight: 32px;
+--BASpoilerPadding: 0px;
+--BASpoilerSideMargin: 0px;
+--BASpoilerBorderRadius: 0px;
+--BASpoilerWrapperMargin: 6px;
+}
+
+body::-webkit-scrollbar {background-color: transparent; width: 12px}
+body::-webkit-scrollbar-thumb {background-color: #bababa; border: none; border-radius: 0px}
+body::-webkit-scrollbar-thumb:hover {background-color: #afafaf}
+body::-webkit-scrollbar-thumb:active {background-color: #9d9d9d}
 
 body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--HorizontalPadding); padding-right: var(--HorizontalPadding)}
 /*---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------*/
@@ -21,13 +36,16 @@ body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--H
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: calc(-1 * var(--HorizontalPadding));
-  width: calc(100% + (var(--HorizontalPadding) * 2));
   box-sizing: border-box;
-  border-style: solid;
+  background-color: #31557d;
+  border: 0 solid RGBA(255, 255, 255, 0.1);
+  border-width: calc(8px * var(--zoom)) 0;
+  margin-left: calc(var(--HorizontalPadding) * -1);
+  width: calc(100% + (var(--HorizontalPadding) * 2));
+  height: calc(220px * var(--zoom));
 }
 
-#HeaderCarousel {
+#HeaderCarouselContainer {
   background-color: #31557d;
   overflow: hidden;
   position: relative;
@@ -36,23 +54,26 @@ body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--H
   box-sizing: border-box;
 }
 
-#HeaderCarouselTrack {
+#HeaderCarousel {
   -webkit-user-drag: none;
   -moz-user-drag: none;
   -ms-user-drag: none;
   user-drag: none;
   user-select: none;
   will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
   opacity: 0;
+  animation: HeaderCarouselFadeIn 1.5s ease forwards;
   transition: opacity 2s;
   display: flex;
   position: absolute;
   height: 100%;
-  visibility: hidden;
-  align-items: center; 
+  align-items: center;
+  gap: calc(6px * var(--zoom));
 }
 
-#HeaderCarouselTrack img {
+#HeaderCarousel img {
   box-sizing: border-box;
   -webkit-user-drag: none;
   -moz-user-drag: none;
@@ -61,264 +82,321 @@ body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--H
   user-select: none;
   flex-shrink: 0;
   object-fit: cover;
-  height: 90%;
+  height: calc(198px * var(--zoom));
+  background-clip: content-box, border-box;
+  background-origin: border-box;
+  border: calc(3px * var(--zoom)) solid transparent;
+  outline: calc(2px * var(--zoom)) solid RGBA(90, 140, 190, 0.3);
+  background-image: linear-gradient(#000000, #000000), linear-gradient(20deg, RGBA(0, 0, 0, 0.2), RGBA(90, 140, 190, 0.2));
 }
 
-
 #HeaderTextContainer {
+  opacity: 0;
   z-index: 1;
   box-sizing: border-box;
   position: absolute;
   margin: 0px;
-  opacity: 0;
-  padding: 15px;
-  padding-top: 10px;
-  backdrop-filter: blur(5px);
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  box-shadow: inset 0px 5px 10px rgba(90, 140, 190, 1),
-             inset 0px -5px 10px rgba(0, 0, 0, 0.4);
-  border: 5px solid rgba(90, 140, 190,0.1);
-  outline: 3px solid rgba(255, 255, 255,0.1);
-  outline-offset: -1px;
+  background: RGBA(255, 255, 255, 0.1);
+  backdrop-filter: blur(calc(10px * var(--zoom)));
+  padding: calc(15px * var(--zoom));
+  padding-top: calc(5px * var(--zoom));
+  border: calc(5px * var(--zoom)) solid RGBA(90, 140, 190,0.1);
+  border-radius: calc(20px * var(--zoom));
+  outline: calc(3px * var(--zoom)) solid RGBA(255, 255, 255,0.1);
+  outline-offset: calc(-1px * var(--zoom));
+  box-shadow: inset calc(0px * var(--zoom)) calc(5px * var(--zoom)) calc(10px * var(--zoom)) RGBA(90, 140, 190, 1),
+             inset calc(0px * var(--zoom)) calc(-5px * var(--zoom)) calc(10px * var(--zoom)) RGBA(0, 0, 0, 0.4);
 }
-
 
 #HeaderText, #HeaderSubText {
   user-select: none;
   -webkit-user-drag: none;
-  margin: 0;
   font-family: "Rubik";
   font-weight: 500;
   color: RGBA(255,255,255, 1);
+  margin: 0;
   text-align: center;
 }
 
+#HeaderText {font-size: calc(52px * var(--zoom))} #HeaderSubText {font-size: calc(14px * var(--zoom))}
 #HeaderSubText a {color: #78c7ff; text-decoration: none} #HeaderSubText a:hover {text-decoration: underline}
 
-@keyframes fadeslide {0% {opacity: 0; transform: translateY(5px)} 100% {opacity: 1; transform: translateY(-5px)}}
+@keyframes HeaderCarouselFadeIn {from {opacity: 0} to {opacity: 1}}
+@keyframes HeaderTextFadeIn {
+  from {opacity: 0; transform: translateY(calc(5px * var(--zoom)))}
+  to   {opacity: 1; transform: translateY(calc(-5px * var(--zoom)))}
+}
+/*---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------*/
+
+
+/*--------------------------------------------------------------------- BASpoiler stuff ---------------------------------------------------------------------*/
+.BASpoiler {
+  overflow: hidden; position: relative; margin: 12px; margin-left: var(--BASpoilerSideMargin); margin-right: var(--BASpoilerSideMargin);
+  padding: var(--BASpoilerPadding); max-width: var(--BASpoilerWidth); height: var(--BASpoilerHeight); max-height: fit-content;
+  border-radius: var(--BASpoilerBorderRadius); border: 1px solid RGBA(55,55,55,1); outline: 2px solid RGBA(80,80,80,1);
+  background: linear-gradient(90deg,rgba(60, 60, 60, 1) 0%, rgba(100, 100, 100, 1) 50%, rgba(60, 60, 60, 1) 100%);
+} /* .BASpoiler {margin: 12px auto}  center */
+.BASpoilerToggle, .BASpoilerCollapse {
+  user-select: none; cursor: pointer; white-space: nowrap;
+  font-family: "Segoe UI"; font-size: 16px; font-weight: 500;
+  color: white; position: relative; width: 100%; height: var(--BASpoilerHeight); background: rgb(90, 90, 90);
+  border: 1px solid #666; border-radius: var(--BASpoilerBorderRadius);
+}
+.BASpoilerCollapse {margin-top: var(--BASpoilerPadding)}
+.BASpoilerToggle:hover, .BASpoilerCollapse:hover {background: rgb(100, 100, 100)}
+.BASpoilerToggle:active, .BASpoilerCollapse:active {background: rgb(60, 60, 60)}
+.BASlidersWrapper {display: flex; flex-direction: column; align-items: center; box-sizing: border-box; position: relative; width: 100%;
+  margin-top: calc(var(--BASpoilerPadding) +  var(--BASpoilerWrapperMargin)); margin-bottom: var(--BASpoilerWrapperMargin); 
+}
+/*--------------------------------------------------------------------- BASpoiler stuff ---------------------------------------------------------------------*/
+
+
+/*---------------------------------------------------------------------- BASlider stuff ---------------------------------------------------------------------*/
+.BASlider {user-select: none; cursor: pointer; overflow: hidden; position: relative; width: 100%; background-color: #222} /* MiM Note: loading background */
+.img-wrapper {position: absolute; width: 100%; height: 100%} .img-wrapper img {width: 100%; height: 100%; object-fit: cover}
+.img-wrapper:before {content: ''; position: absolute; width: 100%; height: 100%; box-sizing: border-box; border: 2px solid RGBA(190,190,190, 0.5)}
+.line {z-index: 2; position: absolute; transform: translateX(-50%); width: 4px; height: 100%;
+      background-color: rgba(255,255,255,0.1); box-shadow: 0 4px 3px rgba(0,0,0,0.6)}
+.handle {z-index: 3; display: flex; justify-content: center; align-items: center; position: absolute;
+        top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 22px;
+        backdrop-filter: blur(8px); border: 2px solid rgba(255,255,255,0.2); border-radius:20%;
+        box-shadow: inset 0 10px 10px rgba(255,255,255,0.4), 0 8px 20px rgba(0,0,0,0.2)}
+.handle::before, .handle::after {content: ''; width: 6px; height:6px; border-top: 2px solid #fff; border-right: 2px solid #fff; opacity: 0.4}
+.handle::before {margin-right: 1px; transform: rotate(-135deg)} .handle::after {margin-left: 1px; transform: rotate(45deg)}
+/*---------------------------------------------------------------------- BASlider stuff ---------------------------------------------------------------------*/
+
+
+
+
+.BASliderWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  margin-top: var(--HorizontalPadding);
+  box-sizing: border-box;
+}
+
+#BASlider1 {outline: 5px solid #333;}
+#BASlider1 .img-wrapper::before {box-sizing: border-box;border-width: 2px; border-color: RGBA(255, 255, 255, 0.05)}
+
+#BASpoiler1 {
+  margin: 12px auto;
+  margin-top: 6px;
+  border-radius: 0px;
+  border: none;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  outline: 5px solid #333;
+  background: none;
+  background-color: #333;
+}
+.BASpoilerToggle, .BASpoilerCollapse {
+  background-color: #444;
+  outline: none;
+  border: none;
+  padding-bottom: 4px;
+}
+
+.BASpoilerToggle:hover, .BASpoilerCollapse:hover {background: rgb(100, 100, 100, 0.5)}
+.BASpoilerToggle:active, .BASpoilerCollapse:active {background: rgb(100, 100, 100, 0.8)}
 
 
 </style>
 </head>
 <body>
+
+<!-- Header stuff -->
 <div id="HeaderContainer">
   <div id="HeaderTextContainer">
     <p id="HeaderText">Entities by MiM</p>
     <p id="HeaderSubText">for the <a target="_blank" draggable="false" href="https://ddnet.org">DDNet</a> client</p>
   </div>
-  <div id="HeaderCarousel">
-    <div id="HeaderCarouselTrack">
-      <img src=""/>
-      <img src="https://i.imgur.com/5IJ6nFb.png"/>
-      <img src="https://i.imgur.com/MLwmQ8J.png"/>
-      <img src="https://i.imgur.com/fflP2aU.png"/>
-      <img src="https://i.imgur.com/WR1XIHA.png"/>
-      <img src="https://i.imgur.com/5IJ6nFb.png"/>
-      <img src="https://i.imgur.com/MLwmQ8J.png"/>
-      <img src="https://i.imgur.com/fflP2aU.png"/>
-      <img src="https://i.imgur.com/WR1XIHA.png"/>
-      <img src="https://i.imgur.com/5IJ6nFb.png"/>
-      <img src="https://i.imgur.com/MLwmQ8J.png"/>
-      <img src="https://i.imgur.com/fflP2aU.png"/>
-      <img src="https://i.imgur.com/WR1XIHA.png"/>
-
-    </div>
-  </div>
+  <div id="HeaderCarouselContainer"><div id="HeaderCarousel"></div></div>
 </div>
 
+<div class="BASliderWrapper">
+<div id="BASlider1" class="BASlider" data-dimensions="880x540" data-before="https://i.imgur.com/NrlMuCd.png" data-after="https://i.imgur.com/YTwzvsM.png"></div>
+</div>
+
+
+
+<div id="BASpoiler1" class="BASpoiler">
+  <button class="BASpoilerToggle">Show more</button>
+    <div class="BASlidersWrapper" data-open="true">
+      <div class="BASlider" data-dimensions="880x540" data-before="https://picsum.photos/id/1015/800/600" data-after="https://picsum.photos/id/1016/800/600"></div>
+      <div class="BASlider" data-dimensions="800x600" data-before="https://picsum.photos/id/1020/800/600" data-after="https://picsum.photos/id/1021/800/600"></div>
+      <div class="BASlider" data-dimensions="651x378" data-before="https://i.imgur.com/8cnDEmD.png" data-after="https://i.imgur.com/29CGtnf.png"></div>
+    </div> <button class="BASpoilerCollapse" tabindex="-1">Collapse</button>
+</div>
+
+
 <script>
+const root = document.documentElement; 
 
-function GetZoomFactor() {return window.devicePixelRatio || 1};
-const root = document.documentElement.style;
-const zoom = 1 / GetZoomFactor();
-//--------------------------------------------------------------------- Header Carousel ---------------------------------------------------------------------//
-let CarouselPosition = 0;
-let PrevTimestamp = null;
-let CarouselImageWidths = [];
+//----------------------------------------------------------------------- Header stuff ----------------------------------------------------------------------//
+const HeaderCarouselImages = [
+  "https://i.imgur.com/pw6ICsa.png",
+  "https://i.imgur.com/nltbwyR.png",
+  "https://i.imgur.com/oiRscpK.png",
+  "https://i.imgur.com/imevHef.png",
+  "https://i.imgur.com/ujZxz31.png",
+  "https://i.imgur.com/TSG0CGg.png"
+];
 
-const HeaderContainer = document.getElementById("HeaderContainer");
-const HeaderCarouselTrack = document.getElementById("HeaderCarouselTrack");
+for (let i = HeaderCarouselImages.length - 1; i > 0; i--) {const j = Math.floor(Math.random() * (i + 1));
+[HeaderCarouselImages[i], HeaderCarouselImages[j]] = [HeaderCarouselImages[j], HeaderCarouselImages[i]]}
+
+
+const ImageCount = 23;
+const HeaderCarouselSpeed = 50;
+const HeaderCarousel = document.getElementById('HeaderCarousel');
 const HeaderTextContainer = document.getElementById("HeaderTextContainer");
-const HeaderText = document.getElementById("HeaderText");
-const HeaderSubText = document.getElementById("HeaderSubText");
-let CarouselImages = Array.from(HeaderCarouselTrack.children);
+
+let CurrentIndex = 0;
+let HeaderCarouselSpacing = 0;
+let HeaderCarouselPosition = 0;
+let HeaderCarouselSpeedScaled = HeaderCarouselSpeed/window.devicePixelRatio;
+let PrevTimestamp = null;
 
 
-
-const HeaderConfig = {
-  Height: 220,
-  BorderSize: 8,
-  BackgroundColor: "#31557d",
-  BorderColor: "RGBA(255, 255, 255, 0.1)",
-  TextAnimation: "1.5s",
-  TextSize: 52,
-  SubTextSize: 14,
-
-  CarouselSpeed: 30,
-  CarouselImageSpacing: 16,
-
-  CarouselImageBorderSize: 6,
-  CarouselImageBorderRadius: 22,
-  CarouselImageBorderColor: "RGBA(90, 140, 190, 0.1)",
-  CarouselImageOutlineSize: 3,
-  CarouselImageOutlineOffset: -1,
-  CarouselImageOutlineColor: "RGBA(255, 255, 255, 0.1)",
-
-  CarouselImageShadow1X: 2,
-  CarouselImageShadow1Y: -2,
-  CarouselImageShadow1Blur: 4,
-  CarouselImageShadow1Color: "RGBA(90, 140, 190, 1)",
-  CarouselImageShadow2X: -2,
-  CarouselImageShadow2Y: 4,
-  CarouselImageShadow2Blur: 4,
-  CarouselImageShadow2Color: "RGBA(0, 0, 0, 1)",
-};
-
-
-
-const RootHeaderVars = {
-"--BackgroundColor": "#222",
-"--HorizontalPadding": "22px",
-
-"--HeaderHeight": `${HeaderConfig.Height * zoom}px`,
-"--HeaderBorderSize": `${HeaderConfig.BorderSize / zoom}px 0`,
-
-"--HeaderTextSize": `${HeaderConfig.TextSize / zoom}px 0`,
-"--HeaderSubTextSize": `${HeaderConfig.SubTextSize / zoom}px 0`,
-
-
-"--CImgSpacing": `${HeaderConfig.CarouselImageSpacing * zoom}px`,
-"--CImgBorderSize": `${HeaderConfig.CarouselImageBorderSize * zoom}px`,
-"--CImgBorderRadius": `${HeaderConfig.CarouselImageBorderRadius * zoom}px`,
-"--CImgBorderColor": `${HeaderConfig.CarouselImageBorderColor}`,
-"--CImgOutlineSize": `${HeaderConfig.CarouselImageOutlineSize * zoom}px`,
-"--CImgOutlineOffset": `${HeaderConfig.CarouselImageOutlineOffset * zoom}px`,
-"--CImgOutlineColor": `${HeaderConfig.CarouselImageOutlineColor}`,
-"--CImgShadow1X": `${HeaderConfig.CarouselImageShadow1X * zoom}px`,
-"--CImgShadow1Y": `${HeaderConfig.CarouselImageShadow1Y * zoom}px`,
-"--CImgShadow1Blur": `${HeaderConfig.CarouselImageShadow1Blur * zoom}px`,
-"--CImgShadow1Color": `${HeaderConfig.CarouselImageShadow1Color}`,
-"--CImgShadow2X": `${HeaderConfig.CarouselImageShadow2X * zoom}px`,
-"--CImgShadow2Y": `${HeaderConfig.CarouselImageShadow2Y * zoom}px`,
-"--CImgShadow2Blur": `${HeaderConfig.CarouselImageShadow2Blur * zoom}px`,
-"--CImgShadow2Color": `${HeaderConfig.CarouselImageShadow2Color}`,
-}; for (const key in RootHeaderVars) {root.setProperty(key, RootHeaderVars[key])};
-
-
-CarouselImages.forEach(img => {
-  img.style.setProperty("border", `var(--CImgBorderSize) solid var(--CImgBorderColor)`);
-  img.style.setProperty("border-radius", `var(--CImgBorderRadius)`);
-  img.style.setProperty("outline", `var(--CImgOutlineSize) solid var(--CImgOutlineColor)`);
-  img.style.setProperty("outline-offset", `var(--CImgOutlineOffset)`);
-  img.style.setProperty("filter", `drop-shadow(var(--CImgShadow1X) var(--CImgShadow1Y) var(--CImgShadow1Blur) var(--CImgShadow1Color))
-                                       drop-shadow(var(--CImgShadow2X) var(--CImgShadow2Y) var(--CImgShadow2Blur) var(--CImgShadow2Color))`);
+(async () => {
+  const loadedImages = await Promise.all(
+    Array.from({length: ImageCount}, () => {
+      const src = HeaderCarouselImages[CurrentIndex];
+      CurrentIndex = (CurrentIndex + 1) % HeaderCarouselImages.length;
+      return new Promise(resolve => {
+        const img = new Image();
+        img.src = src;
+        img.draggable = false;
+        img.onload = img.onerror = () => resolve(img);
+      });
+    })
+  );
+loadedImages.forEach(img => HeaderCarousel.appendChild(img));
+requestAnimationFrame(() => {
+  HeaderCarousel.style.animation = "HeaderCarouselFadeIn 1.5s ease forwards";
+  setTimeout(() => {void HeaderTextContainer.offsetWidth; HeaderTextContainer.style.animation = `HeaderTextFadeIn 1.5s forwards`}, 800);
 });
+updateSizes();
+requestAnimationFrame(HeaderCarouselAnimation);
+})();
 
 
+function HeaderCarouselAnimation(Timestamp) {
+  if (!PrevTimestamp) {PrevTimestamp = Timestamp};
+  HeaderCarouselPosition -= HeaderCarouselSpeedScaled * ((Timestamp - PrevTimestamp) / 1000);
+  PrevTimestamp = Timestamp;
+  if (HeaderCarousel.children.length > 0) {
+    const FirstImageWidth = HeaderCarousel.children[0].offsetWidth + HeaderCarouselSpacing;
+    if (-HeaderCarouselPosition >= FirstImageWidth) {
+      const NewImage = HeaderCarousel.removeChild(HeaderCarousel.children[0]);
+      NewImage.src = HeaderCarouselImages[CurrentIndex];
+      CurrentIndex = (CurrentIndex + 1) % HeaderCarouselImages.length;
+      HeaderCarousel.appendChild(NewImage);
+      HeaderCarouselPosition += FirstImageWidth;
+    }
+  }
 
-
-
-HeaderContainer.style.setProperty("height", `var(--HeaderHeight)`);
-HeaderContainer.style.setProperty("border-width", `var(--HeaderBorderSize)`);
-HeaderContainer.style.setProperty("border-color", `${HeaderConfig.BorderColor}`);
-HeaderContainer.style.setProperty("background-color", `${HeaderConfig.BackgroundColor}`);
-
-HeaderText.style.setProperty("font-size", `var(--HeaderTextSize)`);
-HeaderSubText.style.setProperty("font-size", `var(--HeaderSubTextSize)`);
-
-HeaderCarouselTrack.style.setProperty("gap", `var(--CImgSpacing)`);
-
-
-
+  HeaderCarousel.style.transform = `translate3d(${HeaderCarouselPosition}px,0,0)`;
+  requestAnimationFrame(HeaderCarouselAnimation);
+}
 
 
 function updateSizes() {
-  const zoom = 1 / GetZoomFactor();
+  root.style.setProperty("--zoom", `${(1/(window.devicePixelRatio||1))}`);
+  HeaderCarouselSpeedScaled = HeaderCarouselSpeed/window.devicePixelRatio;
+  HeaderCarouselSpacing = parseFloat(getComputedStyle(HeaderCarousel).gap);
+};
 
-  root.setProperty("--HeaderHeight", `${HeaderConfig.Height * zoom}px`);
-  root.setProperty("--HeaderBorderSize", `${HeaderConfig.BorderSize * zoom}px 0`);
-
-  root.setProperty("--HeaderTextSize", `${HeaderConfig.TextSize * zoom}px`);
-  root.setProperty("--HeaderSubTextSize", `${HeaderConfig.SubTextSize * zoom}px`);
-
-  root.setProperty("--CImgSpacing", `${HeaderConfig.CarouselImageSpacing * zoom}px`);
-  root.setProperty("--CImgBorderSize", `${HeaderConfig.CarouselImageBorderSize * zoom}px`);
-  root.setProperty("--CImgBorderRadius", `${HeaderConfig.CarouselImageBorderRadius * zoom}px`);
-  root.setProperty("--CImgOutlineSize", `${HeaderConfig.CarouselImageOutlineSize * zoom}px`);
-  root.setProperty("--CImgOutlineOffset", `${HeaderConfig.CarouselImageOutlineOffset * zoom}px`);
-  root.setProperty("--CImgShadow1X", `${HeaderConfig.CarouselImageShadow1X * zoom}px`);
-  root.setProperty("--CImgShadow1Y", `${HeaderConfig.CarouselImageShadow1Y * zoom}px`);
-  root.setProperty("--CImgShadow1Blur", `${HeaderConfig.CarouselImageShadow1Blur * zoom}px`);
-  root.setProperty("--CImgShadow2X", `${HeaderConfig.CarouselImageShadow2X * zoom}px`);
-  root.setProperty("--CImgShadow2Y", `${HeaderConfig.CarouselImageShadow2Y * zoom}px`);
-  root.setProperty("--CImgShadow2Blur", `${HeaderConfig.CarouselImageShadow2Blur * zoom}px`);
-
-  CarouselImageWidths = CarouselImages.map(img => img.getBoundingClientRect().width + (HeaderConfig.CarouselImageSpacing * zoom));
-}
+window.addEventListener("resize", () => {requestAnimationFrame(() => {updateSizes()})});
+document.addEventListener("visibilitychange", () => {PrevTimestamp = performance.now()});
+//----------------------------------------------------------------------- Header stuff ----------------------------------------------------------------------//
 
 
-
-
-document.addEventListener("visibilitychange", () => {
-    if (document.hidden) PrevTimestamp = null;
-});
-
-function animateCarousel(timestamp) {
-    if (!PrevTimestamp) PrevTimestamp = timestamp;
-
-    let deltaSeconds = (timestamp - PrevTimestamp) / 1000;
-    deltaSeconds = Math.min(deltaSeconds, 0.05);
-
-    PrevTimestamp = timestamp;
-    const zoom = GetZoomFactor();
-    CarouselPosition -= HeaderConfig.CarouselSpeed * deltaSeconds / zoom;
-
-    if (-CarouselPosition >= CarouselImageWidths[0]) {
-        CarouselPosition += CarouselImageWidths[0];
-        HeaderCarouselTrack.appendChild(CarouselImages[0]);
-        CarouselImages.push(CarouselImages.shift());
-        updateSizes()
-    }
-
-    HeaderCarouselTrack.style.transform = `translate3d(${CarouselPosition}px, 0, 0)`;
-    requestAnimationFrame(animateCarousel);
-}
-
-// Wait for all images to load
-function imagesLoaded(imgs) {
-    return Promise.all(
-        imgs.map(img => img.complete ? Promise.resolve() :
-            new Promise(resolve => img.onload = resolve)
-        )
-    );
-}
-
-// Initial setup
-imagesLoaded(CarouselImages).then(() => {
-  HeaderCarouselTrack.style.visibility = "visible";
-  requestAnimationFrame(() => {
-    HeaderCarouselTrack.style.opacity = "1";
-    setTimeout(() => {
-
-      void HeaderTextContainer.offsetWidth;
-      HeaderTextContainer.style.animation = `fadeslide ${HeaderConfig.TextAnimation} forwards`;
-    }, 1300); // match carousel opacity transition duration
-  });
-
-  updateSizes();
-  requestAnimationFrame(animateCarousel);
-});
-
-
-
-// Update on resize
-window.addEventListener("resize", () => {
-    requestAnimationFrame(() => {
-        updateSizes();
+//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
+class BeforeAfterSlider {
+  constructor(container) {
+    this.container = container; const beforeURL = container.dataset.before, afterURL = container.dataset.after;
+    this.targetValue = 50; this.currentValue = this.targetValue; this.dragging = false; this.mouseDown = false; this.animating = false;
+    this.container.innerHTML = `<div class="img-wrapper"><img src="${beforeURL}" alt="Before"></div>
+                                    <div class="img-wrapper"><img src="${afterURL}" alt="After"></div>
+                                    <div class="line"></div><div class="handle"></div>`;
+    const [w,h] = container.dataset.dimensions.split("x").map(Number);
+    Object.assign(this.container.style, {maxWidth: `${w}px`, aspectRatio: `${w}/${h}`});
+    this.imgAfter = container.querySelector('.img-wrapper:nth-of-type(2)');
+    this.handle = container.querySelector('.handle');
+    this.line = container.querySelector('.line');
+    this.addEventListeners(); this.update();
+  };
+  addEventListeners() {
+    let DragTimeout; this.container.addEventListener('mousedown', (e) => {if (e.button !== 0) return; e.preventDefault();
+      const rect = this.container.getBoundingClientRect(); let percent = ((e.clientX-rect.left)/rect.width)*100;
+      this.targetValue = Math.max(0, Math.min(100, percent)); this.dragging = false; this.mouseDown = true;
+      clearTimeout(DragTimeout); DragTimeout = setTimeout(() => this.mouseDown && (this.dragging = true), 150); this.animate();
+    }); window.addEventListener('mouseup', () => {this.mouseDown = false; clearTimeout(DragTimeout); this.dragging = false});
+    window.addEventListener('mousemove', (e) => {if (!this.mouseDown) return; const rect = this.container.getBoundingClientRect();
+      let percent = ((e.clientX-rect.left)/rect.width)*100; this.targetValue = Math.max(0, Math.min(100, percent)); this.animate();
     });
-});
+  };
+  update() {
+    this.currentValue += (this.targetValue-this.currentValue)*(this.dragging?0.5:0.2);
+    this.line.style.left = `${this.currentValue}%`; this.handle.style.left = `${this.currentValue}%`;
+    this.imgAfter.style.clipPath = `inset(0 0 0 ${this.currentValue}%)`; if (Math.abs(this.currentValue-this.targetValue) > 0.1) {
+    requestAnimationFrame(() => this.update())} else {this.currentValue = this.targetValue; this.animating = false}
+  }; animate() {if (!this.animating) {this.animating = true; requestAnimationFrame(() => this.update())}};
+}
+//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
 
+
+//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
+class BASpoilerAnimator {
+  constructor(spoiler, steps) {
+    this.spoiler = spoiler; this.steps = steps; this.index = 0; this.direction = 1;
+    this.progress = 0; this.running = false; this.startTime = null; this.rafId = null;
+  };
+  step(timestamp) {
+    let step = this.steps[this.index], {start,end} = step;
+    if (this.startTime === null) {this.startTime = timestamp};
+    const frameDelta = timestamp-this.startTime; this.startTime = timestamp;
+    const delta = Math.min(frameDelta/step.duration,1)*this.direction; this.progress += delta;
+    this.progress = Math.min(1, Math.max(0, this.progress)); const value = start+(end-start)*step.easing(this.progress);
+    this.spoiler.style[step.property] = value+"px"; if ((this.progress === 1 && this.direction === 1) || (this.progress === 0
+    && this.direction === -1)) {this.index += this.direction; if (this.index < 0 || this.index >= this.steps.length) {
+    this.index = Math.max(0, Math.min(this.index, this.steps.length - 1)); this.running = false; return}
+    this.progress = this.direction === 1?0:1; this.startTime = null}; this.rafId = requestAnimationFrame(this.step.bind(this));
+  };
+  play() {if (this.running) return; if (this.rafId) cancelAnimationFrame(this.rafId);
+  this.running = true; this.startTime = null; this.rafId = requestAnimationFrame(this.step.bind(this))};
+  playOrReverse() {const atStart = this.index===0 && this.progress===0, atEnd = this.index===this.steps.length-1
+  && this.progress===1; this.direction = atStart ? 1 : atEnd ? -1 : -this.direction; if (!this.running) this.play()}
+}
+//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
+
+
+//------------------------------------------------------------------------ Setup stuff ----------------------------------------------------------------------//
+document.querySelectorAll(".BASlider").forEach(slider => new BeforeAfterSlider(slider));
+document.querySelectorAll(".BASpoiler").forEach(spoiler => {
+  const SlidersWrapper = spoiler.querySelector(".BASlidersWrapper");
+  const BASpoilerToggle = spoiler.querySelector(".BASpoilerToggle");
+  const BASliders = Array.from(SlidersWrapper.querySelectorAll(".BASlider"));
+  const SpoilerCSSVars = ['BASpoilerWidth','BASpoilerHeight','BASpoilerPadding','BASpoilerSideMargin','BASpoilerWrapperMargin'];
+  const SV = Object.fromEntries(SpoilerCSSVars.map(v => [v, parseInt(getComputedStyle(spoiler).getPropertyValue(`--${v}`))]));
+  const dimensions = BASliders.map(({dataset})=>dataset.dimensions.split('x').map(Number)),maxWidth = Math.max(...dimensions.map(([w])=>w));
+  const maxHeight = dimensions.reduce((sum,[,h])=>sum+h,0) + 2*(SV.BASpoilerHeight+SV.BASpoilerPadding+SV.BASpoilerWrapperMargin);
+  const Easings = {none: t => t, cubic: t => t < 0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1, quintic: t => t*t*t*(t*(6*t-15)+10)};
+  const SpoilerAnimation = new BASpoilerAnimator(spoiler, [
+    {property: "maxWidth", start: SV.BASpoilerWidth, end: maxWidth, duration: 500, easing: Easings.cubic}, // 500
+    {property:   "height", start: SV.BASpoilerHeight, end: maxHeight, duration: 700, easing: Easings.quintic} // 700
+  ]);
+  BASpoilerToggle.addEventListener("click", () => {SpoilerAnimation.playOrReverse();
+    BASpoilerToggle.textContent = BASpoilerToggle.textContent === "Show more" ? "Show less" : "Show more";
+  });
+  spoiler.querySelector(".BASpoilerCollapse").addEventListener("click", () => {
+    BASpoilerToggle.textContent = "Show more"; SpoilerAnimation.direction = -1; SpoilerAnimation.play();
+  });
+});
+//------------------------------------------------------------------------ Setup stuff ----------------------------------------------------------------------//
 </script>
 </body>
 </html>
