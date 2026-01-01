@@ -459,7 +459,7 @@ function TilesetFromJSON(Zip, JSON, Size, FolderName, FileName) {
   return new Promise((resolve, reject) => {try {
     const Tiles = JSON.tiles, renderCanvas = document.createElement('canvas'); renderCanvas.width = Size; renderCanvas.height = Size;
     const ctx = renderCanvas.getContext('2d'), img = new Image(); img.src = TilesetPath; img.crossOrigin = "anonymous";
-    img.onload = () => {for (const [key, id] of Object.entries(tiles)) {const [tx,ty] = key.split(',').map(Number);
+    img.onload = () => {for (const [key, id] of Object.entries(JSON.tiles)) {const [tx,ty] = key.split(',').map(Number);
     ctx.drawImage(img,(id%(img.width/64))*64,Math.floor(id/(img.width/64))*64,64,64,tx*64,ty*64,64,64)}
     renderCanvas.toBlob((blob) => {if (blob) {Zip.folder(FolderName).file(FileName, blob); resolve()} else {reject("Blob creation failed")}}
     ,'image/png')}; img.onerror = () => reject("Failed to load tileset image")} catch (e) {reject("Invalid JSON: " + e.message)}
