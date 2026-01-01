@@ -1,402 +1,546 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<!-- MiM Note: add site visits tracking and local storage fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-
-<title>Test</title>
-<script>document.documentElement.style.setProperty('--zoom', (1/(window.devicePixelRatio||1)))</script>
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Entities by MiM</title>
+<script src="jszip.min.js"></script><script>document.documentElement.style.setProperty('--zoom',(1/(window.devicePixelRatio||1)))</script>
 <style>
-:root {
---BackgroundColor: #222; --HorizontalPadding: 22px;
-
---BASpoilerWidth: 100px;
---BASpoilerHeight: 32px;
---BASpoilerPadding: 0px;
---BASpoilerSideMargin: 0px;
---BASpoilerBorderRadius: 0px;
---BASpoilerWrapperMargin: 6px;
-}
-
-body::-webkit-scrollbar {background-color: transparent; width: 12px}
+@font-face {font-family: 'Rubik'; src: url('fonts/Rubik-VariableFont_wght.ttf') format('truetype-variations'); font-weight: 300 900; font-style: normal}
+:root {--BackgroundColor: #222; --HorizontalPadding: 22px}
+* {color: white; -webkit-user-drag: none; -moz-user-drag: none; -ms-user-drag: none; user-drag: none; user-select: none}
+body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--HorizontalPadding); padding-right: var(--HorizontalPadding)}
+body::-webkit-scrollbar {background-color: transparent; width: calc(12px*var(--zoom))}
 body::-webkit-scrollbar-thumb {background-color: #bababa; border: none; border-radius: 0px}
 body::-webkit-scrollbar-thumb:hover {background-color: #afafaf}
 body::-webkit-scrollbar-thumb:active {background-color: #9d9d9d}
-
-body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--HorizontalPadding); padding-right: var(--HorizontalPadding)}
+@keyframes FadeIn {from {opacity: 0} to {opacity: 1}}
+@keyframes FadePosIn {
+  from {opacity: 0; transform: translateY(calc(5px*var(--zoom)))} to {opacity: 1; transform: translateY(calc(-5px*var(--zoom)))}
+}
 /*---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------*/
-#HeaderContainer {
-  user-select: none;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  background-color: #31557d;
-  border: 0 solid RGBA(255, 255, 255, 0.1);
-  border-width: calc(8px * var(--zoom)) 0;
-  margin-left: calc(var(--HorizontalPadding) * -1);
-  width: calc(100% + (var(--HorizontalPadding) * 2));
-  height: calc(220px * var(--zoom));
+#HeaderContainer {overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  box-sizing: border-box; background-color: #31557d; border: 0 solid RGBA(255, 255, 255, 0.1); border-width: calc(8px*var(--zoom)) 0;
+  margin-left: calc(var(--HorizontalPadding)*-1); width: calc(100% + (var(--HorizontalPadding)*2)); height: calc(220px*var(--zoom));
 }
-
-#HeaderCarouselContainer {
-  background-color: #31557d;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
+#HeaderCarouselContainer {background-color: #31557d; overflow: hidden; position: relative; width: 100%; height: 100%; box-sizing: border-box}
 #HeaderCarousel {
-  -webkit-user-drag: none;
-  -moz-user-drag: none;
-  -ms-user-drag: none;
-  user-drag: none;
-  user-select: none;
-  will-change: transform;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-  opacity: 0;
-  animation: HeaderCarouselFadeIn 1.5s ease forwards;
-  transition: opacity 2s;
-  display: flex;
-  position: absolute;
-  height: 100%;
-  align-items: center;
-  gap: calc(6px * var(--zoom));
+  will-change: transform; backface-visibility: hidden; transform-style: preserve-3d; opacity: 0;
+  transition: opacity 2s; animation: FadeIn 1.5s ease forwards; transition: opacity 2s; display: flex;
+  position: absolute; height: 100%; align-items: center; gap: calc(6px*var(--zoom))
 }
-
 #HeaderCarousel img {
-  box-sizing: border-box;
-  -webkit-user-drag: none;
-  -moz-user-drag: none;
-  -ms-user-drag: none;
-  user-drag: none;
-  user-select: none;
-  flex-shrink: 0;
-  object-fit: cover;
-  height: calc(198px * var(--zoom));
-  background-clip: content-box, border-box;
-  background-origin: border-box;
-  border: calc(3px * var(--zoom)) solid transparent;
-  outline: calc(2px * var(--zoom)) solid RGBA(90, 140, 190, 0.3);
+  background-origin: border-box; flex-shrink: 0; object-fit: cover; height: calc(198px*var(--zoom)); background-clip: content-box, border-box;
+  box-sizing: border-box; border: calc(3px*var(--zoom)) solid transparent; outline: calc(2px*var(--zoom)) solid RGBA(90, 140, 190, 0.3);
   background-image: linear-gradient(#000000, #000000), linear-gradient(20deg, RGBA(0, 0, 0, 0.2), RGBA(90, 140, 190, 0.2));
 }
-
 #HeaderTextContainer {
-  opacity: 0;
-  z-index: 1;
-  box-sizing: border-box;
-  position: absolute;
-  margin: 0px;
-  background: RGBA(255, 255, 255, 0.1);
-  backdrop-filter: blur(calc(10px * var(--zoom)));
-  padding: calc(15px * var(--zoom));
-  padding-top: calc(5px * var(--zoom));
-  border: calc(5px * var(--zoom)) solid RGBA(90, 140, 190,0.1);
-  border-radius: calc(20px * var(--zoom));
-  outline: calc(3px * var(--zoom)) solid RGBA(255, 255, 255,0.1);
-  outline-offset: calc(-1px * var(--zoom));
-  box-shadow: inset calc(0px * var(--zoom)) calc(5px * var(--zoom)) calc(10px * var(--zoom)) RGBA(90, 140, 190, 1),
-             inset calc(0px * var(--zoom)) calc(-5px * var(--zoom)) calc(10px * var(--zoom)) RGBA(0, 0, 0, 0.4);
+  opacity: 0; z-index: 1; box-sizing: border-box; position: absolute; margin: 0px; background: RGBA(255, 255, 255, 0.1);
+  backdrop-filter: blur(calc(10px*var(--zoom))); padding: calc(15px*var(--zoom)); padding-top: calc(5px*var(--zoom));
+  border: calc(2px*var(--zoom)) solid RGBA(90, 140, 190,0.1); border-radius: calc(15px*var(--zoom));
+  outline: calc(2px*var(--zoom)) solid RGBA(255, 255, 255,0.1); outline-offset: calc(-1px*var(--zoom));
+  box-shadow: inset calc(0px*var(--zoom)) calc(5px*var(--zoom)) calc(10px*var(--zoom)) RGBA(90, 140, 190, 1),
+              inset calc(0px*var(--zoom)) calc(-5px*var(--zoom)) calc(10px*var(--zoom)) RGBA(0, 0, 0, 0.2);
 }
-
-#HeaderText, #HeaderSubText {
-  user-select: none;
-  -webkit-user-drag: none;
-  font-family: "Rubik";
-  font-weight: 500;
-  color: RGBA(255,255,255, 1);
-  margin: 0;
-  text-align: center;
-}
-
-#HeaderText {font-size: calc(52px * var(--zoom))} #HeaderSubText {font-size: calc(14px * var(--zoom))}
+#HeaderText, #HeaderSubText {font-family: "Rubik"; font-weight: 500; color: RGBA(255,255,255, 1); margin: 0; text-align: center}
+#HeaderText {font-size: calc(52px*var(--zoom))} #HeaderSubText {font-size: calc(14px*var(--zoom))}
 #HeaderSubText a {color: #78c7ff; text-decoration: none} #HeaderSubText a:hover {text-decoration: underline}
-
-@keyframes HeaderCarouselFadeIn {from {opacity: 0} to {opacity: 1}}
-@keyframes HeaderTextFadeIn {
-  from {opacity: 0; transform: translateY(calc(5px * var(--zoom)))}
-  to   {opacity: 1; transform: translateY(calc(-5px * var(--zoom)))}
-}
-/*---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------*/
-
-
-/*--------------------------------------------------------------------- BASpoiler stuff ---------------------------------------------------------------------*/
-.BASpoiler {
-  overflow: hidden; position: relative; margin: 12px; margin-left: var(--BASpoilerSideMargin); margin-right: var(--BASpoilerSideMargin);
-  padding: var(--BASpoilerPadding); max-width: var(--BASpoilerWidth); height: var(--BASpoilerHeight); max-height: fit-content;
-  border-radius: var(--BASpoilerBorderRadius); border: 1px solid RGBA(55,55,55,1); outline: 2px solid RGBA(80,80,80,1);
-  background: linear-gradient(90deg,rgba(60, 60, 60, 1) 0%, rgba(100, 100, 100, 1) 50%, rgba(60, 60, 60, 1) 100%);
-} /* .BASpoiler {margin: 12px auto}  center */
-.BASpoilerToggle, .BASpoilerCollapse {
-  user-select: none; cursor: pointer; white-space: nowrap;
-  font-family: "Segoe UI"; font-size: 16px; font-weight: 500;
-  color: white; position: relative; width: 100%; height: var(--BASpoilerHeight); background: rgb(90, 90, 90);
-  border: 1px solid #666; border-radius: var(--BASpoilerBorderRadius);
-}
-.BASpoilerCollapse {margin-top: var(--BASpoilerPadding)}
-.BASpoilerToggle:hover, .BASpoilerCollapse:hover {background: rgb(100, 100, 100)}
-.BASpoilerToggle:active, .BASpoilerCollapse:active {background: rgb(60, 60, 60)}
-.BASlidersWrapper {display: flex; flex-direction: column; align-items: center; box-sizing: border-box; position: relative; width: 100%;
-  margin-top: calc(var(--BASpoilerPadding) +  var(--BASpoilerWrapperMargin)); margin-bottom: var(--BASpoilerWrapperMargin); 
-}
-/*--------------------------------------------------------------------- BASpoiler stuff ---------------------------------------------------------------------*/
-
-
 /*---------------------------------------------------------------------- BASlider stuff ---------------------------------------------------------------------*/
-.BASlider {user-select: none; cursor: pointer; overflow: hidden; position: relative; width: 100%; background-color: #222} /* MiM Note: loading background */
+.BASlider {cursor: pointer; overflow: hidden; position: relative; width: 100%; background-color: #222} 
+.BASlider:after {content: ''; position: absolute; width: 100%; height: 100%; box-sizing: border-box;
+                outline: calc(2px*var(--zoom)) solid RGBA(190,190,190, 0.2); outline-offset: calc(-2px*var(--zoom))}
+.BASlider img {image-rendering: auto; transform: translateZ(0); backface-visibility: hidden}
 .img-wrapper {position: absolute; width: 100%; height: 100%} .img-wrapper img {width: 100%; height: 100%; object-fit: cover}
-.img-wrapper:before {content: ''; position: absolute; width: 100%; height: 100%; box-sizing: border-box; border: 2px solid RGBA(190,190,190, 0.5)}
-.line {z-index: 2; position: absolute; transform: translateX(-50%); width: 4px; height: 100%;
-      background-color: rgba(255,255,255,0.1); box-shadow: 0 4px 3px rgba(0,0,0,0.6)}
-.handle {z-index: 3; display: flex; justify-content: center; align-items: center; position: absolute;
-        top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 22px;
-        backdrop-filter: blur(8px); border: 2px solid rgba(255,255,255,0.2); border-radius:20%;
-        box-shadow: inset 0 10px 10px rgba(255,255,255,0.4), 0 8px 20px rgba(0,0,0,0.2)}
-.handle::before, .handle::after {content: ''; width: 6px; height:6px; border-top: 2px solid #fff; border-right: 2px solid #fff; opacity: 0.4}
-.handle::before {margin-right: 1px; transform: rotate(-135deg)} .handle::after {margin-left: 1px; transform: rotate(45deg)}
-/*---------------------------------------------------------------------- BASlider stuff ---------------------------------------------------------------------*/
-
-
-
-
-.BASliderWrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center; 
-  margin-top: var(--HorizontalPadding);
-  box-sizing: border-box;
+.line {position: absolute; transform: translateX(-50%); width: calc(1px*var(--zoom)); height: 100%; background: rgba(255,255,255,0.05)}
+.handle {
+  z-index: 3; display: flex; justify-content: center; align-items: center; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); width: calc(28px*var(--zoom)); height: calc(18px*var(--zoom));
+  backdrop-filter: blur(calc(8px*var(--zoom))); border: calc(2px*var(--zoom)) solid rgba(255,255,255,0.05);
+  border-radius: calc(15px*var(--zoom)); box-shadow: 0 0 calc(5px*var(--zoom)) rgba(0,0,0,0.3)
 }
-
-#BASlider1 {outline: 5px solid #333;}
-#BASlider1 .img-wrapper::before {box-sizing: border-box;border-width: 2px; border-color: RGBA(255, 255, 255, 0.05)}
-
-#BASpoiler1 {
-  margin: 12px auto;
-  margin-top: 6px;
-  border-radius: 0px;
-  border: none;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  outline: 5px solid #333;
-  background: none;
-  background-color: #333;
+.handle::before, .handle::after {content: ''; width: calc(6px*var(--zoom)); height: calc(6px*var(--zoom));
+                               border-top: calc(2px*var(--zoom)) solid #fff; border-right: calc(2px*var(--zoom)) solid #fff; opacity: 0.5}
+.handle::before {margin-right: calc(1px*var(--zoom)); transform: rotate(-135deg)}
+.handle::after {margin-left: calc(1px*var(--zoom)); transform: rotate(45deg)}
+/*--------------------------------------------------------------------- BASlideshow stuff -------------------------------------------------------------------*/
+.SectionLabel {
+  font-family: "Rubik"; font-size: calc(14px*var(--zoom)); font-weight: 600; color: RGBA(255,255,255, 0.5);
+  text-align: center; letter-spacing: calc(2px*var(--zoom)); text-transform: uppercase; background: RGBA(255,255,255,0.1);
+  padding: calc(6px*var(--zoom)) calc(12px*var(--zoom)); border-radius: calc(15px*var(--zoom));
+  border: calc(1px*var(--zoom)) solid RGBA(255,255,255,0.08); border-bottom: none; margin-bottom: calc(0px*var(--zoom));
+  margin-top: calc(20px*var(--zoom)); border-bottom-right-radius: calc(0px*var(--zoom)); border-bottom-left-radius: calc(0px*var(--zoom));
 }
-.BASpoilerToggle, .BASpoilerCollapse {
-  background-color: #444;
-  outline: none;
-  border: none;
-  padding-bottom: 4px;
+.SectionWrapper {display: flex; flex-direction: column; align-items: center; position: relative; width: 100%; opacity: 0; transition: opacity 1s ease}
+.BASlider.BASlideshow {background-color: #222222; border-radius: calc(18px*var(--zoom)); outline: calc(3px*var(--zoom)) solid RGBA(0,0,0,0.25)}
+.BASlider.BASlideshow:after {border-radius: calc(18px*var(--zoom))}
+.BASlideshowButton {
+  --radius: calc(15px*var(--zoom)); z-index: 1; flex-shrink: 0; cursor: pointer; width: calc(24px*var(--zoom));
+  margin: calc(30px*var(--zoom)) 0; background: RGBA(255,255,255,0.1); border: calc(1px*var(--zoom)) solid RGBA(255,255,255,0.08)
 }
-
-.BASpoilerToggle:hover, .BASpoilerCollapse:hover {background: rgb(100, 100, 100, 0.5)}
-.BASpoilerToggle:active, .BASpoilerCollapse:active {background: rgb(100, 100, 100, 0.8)}
-
-
+.BASlideshowButton::before {
+  content: ''; transform-origin: center; opacity: 0.3; display: block; position: relative;
+  top: 50%; left: 50%; width: calc(8px*var(--zoom)); height: calc(8px*var(--zoom));
+  border-top: calc(3px*var(--zoom)) solid RGB(255, 255, 255, 1); border-right: calc(3px*var(--zoom)) solid RGB(255, 255, 255, 1);
+}
+.BASlideshowButton.Prev {border-right: none; border-radius: var(--radius) 0 0 var(--radius)}
+.BASlideshowButton.Next {border-left: none; border-radius: 0 var(--radius) var(--radius) 0}
+.BASlideshowButton:hover::before {opacity: 0.5} .BASlideshowButton:hover {background: rgba(255, 255, 255, 0.125)}
+.BASlideshowButton:active::before {opacity: 0.15} .BASlideshowButton:active {background: rgba(255, 255, 255, 0.085)}
+.BASlideshowButton.Prev::before {transform: translate(-20%, -50%) rotate(-135deg)}
+.BASlideshowButton.Next::before {transform: translate(-75%, -50%) rotate(45deg)}
+.BASlideshowSliderWrapper {position: relative; display: flex; width: 100%; justify-content: center; align-items: stretch}
+.BASlideshowDots {display: flex; align-items: stretch; justify-content: center}
+.BASlideshowDot {
+  cursor: pointer; display: flex; align-items: center; justify-content: center; padding-top: calc(10px*var(--zoom));
+  padding-bottom: calc(10px*var(--zoom)); padding-left: calc(2px*var(--zoom)); padding-right: calc(2px*var(--zoom));
+}
+.BASlideshowDot::before {
+  content: ""; box-sizing: border-box; width: calc(14px*var(--zoom)); height: calc(14px*var(--zoom));
+  background-color: transparent; border: calc(2px*var(--zoom)) solid #4e4e4e; border-radius: 25%
+}
+.BASlideshowDot:hover:not(.active)::before {border-color: #696969} .BASlideshowDot.active {cursor: auto;}
+.BASlideshowDot.active::before {background-color: #4e4e4e; border: calc(1px*var(--zoom)) solid #222222}
+/*------------------------------------------------------------------- Color selector stuff ------------------------------------------------------------------*/
+.ColorSelectorContainer {
+  display: flex; flex-direction: column; align-items: center; gap: calc(8px*var(--zoom)); padding: calc(8px*var(--zoom));
+  background: RGBA(255,255,255,0.1); border-radius: calc(15px*var(--zoom)); border: calc(1px*var(--zoom)) solid rgba(255, 255, 255, 0.08);
+  border-bottom-right-radius: calc(0px*var(--zoom)); border-bottom-left-radius: calc(0px*var(--zoom)); width: 100%; max-width: fit-content;
+  box-sizing: border-box; margin-top: calc(15px*var(--zoom)); padding-bottom: 10px
+}
+.SectionLabel.SelectColorLabel {background: none; border: none; padding: 0; margin: 0}
+.SwatchWrapper {display: flex; gap: calc(8px*var(--zoom)); justify-content: center}
+.ColorSwatch {
+  cursor: pointer; background-clip: content-box; padding: calc(3px*var(--zoom)); box-sizing: border-box; flex: 0 1 calc(36px*var(--zoom));
+  width: calc(35px*var(--zoom)); height: calc(25px*var(--zoom)); border-radius: calc(2px*var(--zoom));
+  border: calc(2px*var(--zoom)) solid rgba(255,255,255, 0); background-color: var(--swatch-color);
+  box-shadow: calc(3px*var(--zoom)) calc(3px*var(--zoom)) calc(1px*var(--zoom)) rgba(0,0,0,0.1),
+  inset calc(1px*var(--zoom)) calc(1px*var(--zoom)) calc(2px*var(--zoom)) rgba(255,255,255,0.2); transition: all 0.1s ease, border 0s
+}
+.ColorSwatch:hover {border-color: rgba(255,255,255, 0.4)}
+.ColorSwatch.active {
+  border-color: rgba(255,255,255, 0.8); transform: translate(calc(1px*var(--zoom)), calc(1px*var(--zoom)));
+  box-shadow: inset calc(3px*var(--zoom)) calc(3px*var(--zoom)) calc(6px*var(--zoom)) rgba(0,0,0,0.5),
+             0 0 0 calc(2px*var(--zoom)) rgba(255,255,255,0.1)
+}
+/*-------------------------------------------------------------------- Instructions stuff -------------------------------------------------------------------*/
+#InstructionsContainer {margin-top: calc(50px*var(--zoom)); font-family: "Rubik", sans-serif}
+.InstructionGrid {display: flex; flex-direction: column; align-items: center; gap: calc(30px*var(--zoom))}
+.StepContainer {
+  background: rgba(255, 255, 255, 0.03); border: calc(1px*var(--zoom)) solid rgba(255, 255, 255, 0.08);
+  border-radius: calc(12px*var(--zoom)); padding: calc(15px*var(--zoom)); position: relative;
+  transition: transform 0.3s ease; width: 100%; max-width: calc(600px*var(--zoom)); box-sizing: border-box; text-align: center
+}
+.StepContainer h3 {color: #fff; margin: 0 0 calc(12px*var(--zoom)) 0; font-size: calc(20px*var(--zoom))}
+.StepContainer p {color: rgba(255, 255, 255, 0.6); font-size: calc(14px*var(--zoom)); line-height: 1.6; margin: 0}
+#SecondaryWarning {margin-top: calc(10px*var(--zoom))}
+/* Engine Selection */
+.StepContainer.engine h3 {margin-top: calc(2px*var(--zoom))}
+.StepContainer.engine p:first-of-type {margin-top: calc(-6px*var(--zoom)); margin-bottom: calc(12px*var(--zoom));}
+.EngineSelector + p {margin-top: calc(15px*var(--zoom)); margin-bottom: calc(18px*var(--zoom))}
+.EngineSelector {display: flex; justify-content: center; gap: calc(15px*var(--zoom)); margin: calc(10px*var(--zoom)) 0}
+.EngineOption {cursor: pointer; display: flex; align-items: center; gap: calc(10px*var(--zoom)); font-size: calc(14px*var(--zoom))}
+.EngineOption input {
+  appearance: none; -webkit-appearance: none; margin: 0; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; width: calc(22px*var(--zoom)); height: calc(22px*var(--zoom)); position: relative
+}
+.EngineOption input::before {
+  content: ""; box-sizing: border-box; width: 100%; height: 100%; background-color: transparent;
+  border: calc(2px*var(--zoom)) solid #4e4e4e; transition: all 0.2s ease; border-radius: calc(4px*var(--zoom)); position: absolute
+}
+.EngineOption:hover input::before {border-color: RGBA(255, 255, 255, 0.5)} .EngineOption input:checked::before {background-color: #292929}
+.EngineOption input:checked::after {
+  content: ""; position: absolute; width: calc(12px*var(--zoom)); height: calc(12px*var(--zoom));
+  background-color: RGBA(255, 255, 255, 0.9); border-radius: calc(2px*var(--zoom))
+}
+.ComparisonImages {display: flex; gap: calc(10px*var(--zoom)); justify-content: center; margin-top: calc(15px*var(--zoom))} .ComparisonBox {flex: 1}
+.ComparisonBox p {font-size: calc(10px*var(--zoom)) !important; margin-bottom: calc(5px*var(--zoom)) !important; font-weight: bold}
+.ComparisonBox img {
+  image-rendering: pixelated; image-rendering: crisp-edges; width: calc(122px*var(--zoom)); height: calc(122px*var(--zoom));
+  border-radius: calc(6px*var(--zoom)); border: calc(1px* var(--zoom)) solid rgba(255, 255, 255, 0.1);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+}
+/* Additional assets */
+.StepContainer.assets {padding-bottom: calc(25px*var(--zoom))}
+.StepContainer.assets h3 {margin-top: calc(5px*var(--zoom)); margin-bottom: calc(-8px*var(--zoom))}
+.AdditionalAssetsContainer {
+  display: flex; flex-direction: column; gap: calc(12px*var(--zoom)); margin-top: calc(10px*var(--zoom));
+  width: fit-content; margin-left: auto; margin-right: auto; margin-top: 30px;
+}
+.Asset {
+  display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.2);
+  padding: calc(15px*var(--zoom)) calc(15px*var(--zoom)); border-radius: calc(10px*var(--zoom));
+  border: calc(1px*var(--zoom)) solid rgba(255, 255, 255, 0.05); gap: calc(15px*var(--zoom));
+}
+.AssetLabel {
+  font-size: calc(11px*var(--zoom)); text-transform: uppercase; letter-spacing: calc(1px*var(--zoom));
+  font-weight: 700; color: rgba(255, 255, 255, 0.8); margin-top: calc(-40px*var(--zoom));
+}
+.AssetPreview {
+  width: calc(100px*var(--zoom)); height: calc(100px*var(--zoom)); image-rendering: auto; border-radius: calc(6px*var(--zoom));
+  border: calc(1px* var(--zoom)) solid rgba(255, 255, 255, 0.1); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+}
+.ToggleCenter {display: flex; flex-direction: column; align-items: center; flex: 0 1 auto; width: calc(140px*var(--zoom))}
+.AssetToggle {position: relative; width: calc(60px*var(--zoom)); height: calc(30px*var(--zoom)); top: calc(20px*var(--zoom))}
+.AssetToggle input {opacity: 0; width: 0; height: 0}
+.SliderRound {
+  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #444; transition: .4s; border-radius: calc(2px*var(--zoom));
+}
+.SliderRound:before {
+  position: absolute; content: ""; height: calc(20px*var(--zoom)); width: calc(20px*var(--zoom)); 
+  left: calc(5px*var(--zoom)); bottom: calc(5px*var(--zoom)); background-color: #eaeaea; transition: .4s; border-radius: calc(2px*var(--zoom));
+}
+input:checked + .SliderRound {background-color: #31557d} input:checked + .SliderRound:before {transform: translateX(calc(30px*var(--zoom)))}
+/*--------------------------------------------------------------------- Download stuff ----------------------------------------------------------------------*/
+#DownloadButton {
+  background: #444; color: #888; border: none; padding: calc(12px*var(--zoom)) calc(40px*var(--zoom));
+  margin-top: calc(20px*var(--zoom)); margin-bottom: calc(22px*var(--zoom)); border-radius: calc(5px*var(--zoom));
+  font-size: calc(20px*var(--zoom)); font-family: 'Arial', sans-serif;
+  font-weight: 800; cursor: not-allowed; transition: all 0.1s; letter-spacing: 1px;
+}
+#DownloadButton.enabled {background: #31557d; color: #fff; cursor: pointer; box-shadow: 0 0 calc(15px*var(--zoom)) rgba(0,0,0,0.3)}
+#DownloadButton.enabled:hover {filter: brightness(120%)} #DownloadButton.enabled:active {filter: brightness(90%)}
+/*--------------------------------------------------------------------- Install stuff -----------------------------------------------------------------------*/
+.StepContainer.install {border-width: calc(2px * var(--zoom)); border-color: rgba(255, 255, 255, 0.2); margin-bottom: calc(30px * var(--zoom))}
+.StepContainer.install h3 {margin-top: calc(5px * var(--zoom)); margin-bottom: calc(6px * var(--zoom));}
+.InstallSteps {display: inline-block; margin-top: calc(10px * var(--zoom))}
+.InstallSteps p {margin-bottom: calc(12px * var(--zoom)) !important; color: rgba(255, 255, 255, 0.8) !important}
+.InstallSteps code {background: #666; padding: calc(3px*var(--zoom)); border-radius: calc(3px*var(--zoom))}
+/*---------------------------------------------------------------------- Footer stuff -----------------------------------------------------------------------*/
+#Footer p {margin: 0; font-size: calc(14px*var(--zoom)); line-height: 1.8}
+#Footer {
+  margin-top: calc(20px*var(--zoom)); margin-bottom: calc(30px*var(--zoom)); padding-top: calc(20px*var(--zoom));
+  font-family: "Rubik", sans-serif; text-align: center; border-top: calc(1px*var(--zoom)) solid rgba(255, 255, 255, 0.05);
+  width: 100%; max-width: calc(800px*var(--zoom)); margin-left: auto; margin-right: auto;  opacity: 0.6;
+}
+.CreditsTitle {font-size: calc(12px*var(--zoom)); letter-spacing: calc(1px*var(--zoom)); color: rgba(255, 255, 255, 0.7)}
+.CreditsNames {display: flex; flex-wrap: wrap; justify-content: center; gap: calc(10px*var(--zoom)); margin-bottom: calc(2px*var(--zoom))}
+.CreditName {font-size: calc(18px*var(--zoom)); font-weight: 500; color: rgba(255, 255, 255, 1); transition: color 0.3s ease}
+.FooterNote {font-size: calc(25px*var(--zoom)); color: rgba(255, 255, 255, 0.7)}
 </style>
 </head>
 <body>
-
-<!-- Header stuff -->
+<!------------------------------------------------------------------------- Header --------------------------------------------------------------------------->
 <div id="HeaderContainer">
+  <div id="HeaderCarouselContainer"><div id="HeaderCarousel"></div></div>
   <div id="HeaderTextContainer">
     <p id="HeaderText">Entities by MiM</p>
     <p id="HeaderSubText">for the <a target="_blank" draggable="false" href="https://ddnet.org">DDNet</a> client</p>
   </div>
-  <div id="HeaderCarouselContainer"><div id="HeaderCarousel"></div></div>
 </div>
-
-<div class="BASliderWrapper">
-<div id="BASlider1" class="BASlider" data-dimensions="880x540" data-before="https://i.imgur.com/NrlMuCd.png" data-after="https://i.imgur.com/YTwzvsM.png"></div>
+<!----------------------------------------------------------------------- Section 1 -------------------------------------------------------------------------->
+<div id="Section1" class="SectionWrapper">
+  <p class="SectionLabel">Compared to default</p>
+  <div class="BASlideshowSliderWrapper">
+    <div class="BASlideshowButton Prev"></div>
+    <div class="BASlider BASlideshow"></div>
+    <div class="BASlideshowButton Next"></div>
+  </div>
+  <div class="BASlideshowDots"></div>
 </div>
-
-
-
-<div id="BASpoiler1" class="BASpoiler">
-  <button class="BASpoilerToggle">Show more</button>
-    <div class="BASlidersWrapper" data-open="true">
-      <div class="BASlider" data-dimensions="880x540" data-before="https://picsum.photos/id/1015/800/600" data-after="https://picsum.photos/id/1016/800/600"></div>
-      <div class="BASlider" data-dimensions="800x600" data-before="https://picsum.photos/id/1020/800/600" data-after="https://picsum.photos/id/1021/800/600"></div>
-      <div class="BASlider" data-dimensions="651x378" data-before="https://i.imgur.com/8cnDEmD.png" data-after="https://i.imgur.com/29CGtnf.png"></div>
-    </div> <button class="BASpoilerCollapse" tabindex="-1">Collapse</button>
+<!----------------------------------------------------------------------- Section 2 -------------------------------------------------------------------------->
+<div id="Section2" class="SectionWrapper">
+<div class="ColorSelectorContainer">
+  <p class="SectionLabel SelectColorLabel">Select hookable color</p>
+  <div class="SwatchWrapper">
+    <div class="ColorSwatch active" style="--swatch-color: #3c4f91;" data-color="1"></div>
+    <div class="ColorSwatch" style="--swatch-color: #6943a1;" data-color="2"></div>
+    <div class="ColorSwatch" style="--swatch-color: #943131;" data-color="3"></div>
+    <div class="ColorSwatch" style="--swatch-color: #9e603f;" data-color="4"></div>
+    <div class="ColorSwatch" style="--swatch-color: #a89643;" data-color="5"></div>
+    <div class="ColorSwatch" style="--swatch-color: #388a43;" data-color="6"></div>
+  </div>
+  </div>
+  <div class="BASlideshowSliderWrapper">
+    <div class="BASlideshowButton Prev"></div>
+    <div class="BASlider BASlideshow"></div>
+    <div class="BASlideshowButton Next"></div>
+  </div>
+  <div class="BASlideshowDots"></div>
 </div>
-
-
+<!--------------------------------------------------------------------- Instructions ------------------------------------------------------------------------->
+<div id="InstructionsContainer">
+  <div class="InstructionGrid">
+    <div class="StepContainer warning">
+      <h3>Important!</h3>
+      <p>Before proceeding i highly recommend you download a separate client from <a href="https://ddnet.org/downloads/" target="_blank"
+      style="color:#78c7ff; text-decoration: underline;">ddnet.org/downloads</a> so that you do not mess with your current stuff!</p>
+      <p id="SecondaryWarning">I also recommend to use the default blue hookable color.</p>
+    </div>
+    <!-- Engine selection -->
+    <div class="StepContainer engine">
+      <h3>Select Your game rendering engine</h3>
+      <p>Found in Settings > Graphics > Renderer</p>
+      <div class="EngineSelector">
+        <label class="EngineOption"><input type="radio" name="rendering_engine" value="opengl"> OpenGL</label>
+        <label class="EngineOption"><input type="radio" name="rendering_engine" value="vulkan"> Vulkan</label>
+      </div>
+      <p>This is to make things like the checkpoint stripes render correctly:</p>
+      <div class="ComparisonImages">
+        <div class="ComparisonBox"><p style="color: #00C851;">CORRECT ALIGNMENT</p><img src="Engine previews\Stripes aligned.png"></div>
+        <div class="ComparisonBox"><p style="color: #ff4444;">INCORRECT ALIGNMENT</p><img src="Engine previews\Stripes not aligned.png"></div>
+      </div>
+    </div>
+    <!-- Assets selection -->
+    <div class="StepContainer assets">
+      <h3>Replace additional assets?</h3>
+      <div class="AdditionalAssetsContainer">
+        <div class="Asset">
+          <img class="AssetPreview" src="Extras previews\Gui cursor before.png">
+            <div class="ToggleCenter">
+              <span class="AssetLabel">GUI Cursor</span>
+              <label class="AssetToggle"><input type="checkbox" id="GuiCursorToggle" checked><span class="SliderRound"></span></label>
+            </div>
+          <img class="AssetPreview" src="Extras previews\Gui cursor after.png">
+        </div>
+        <div class="Asset">
+          <img class="AssetPreview" src="Extras previews\Editor cursors before.png">
+          <div class="ToggleCenter">
+            <span class="AssetLabel">Editor cursors</span>
+            <label class="AssetToggle"><input type="checkbox" id="EditorCursorsToggle" checked> <span class="SliderRound"></span></label>
+          </div>
+          <img class="AssetPreview" src="Extras previews\Editor cursors after.png">
+        </div>
+        <div class="Asset">
+          <img class="AssetPreview" src="Extras previews\Editor checkerboard before.png">
+          <div class="ToggleCenter">
+            <span class="AssetLabel">Editor background</span>
+            <label class="AssetToggle"><input type="checkbox" id="EditorCheckerboardToggle" checked><span class="SliderRound"></span></label>
+          </div>
+          <img class="AssetPreview" src="Extras previews\Editor checkerboard after.png">
+        </div>
+      </div>
+    </div>
+    <!-- Download -->
+    <button id="DownloadButton" disabled>Please select the rendering engine!</button>
+    <!-- Install instructions -->
+    <div class="StepContainer install">
+      <h3>How to install</h3>
+      <div class="InstallSteps">
+        <p>1. <strong>Unpack</strong> the downloaded ZIP file</p>
+        <p>2. <strong>Drag</strong> the unpacked <code>data</code> folder onto your client folder</p>
+        <p>3. Select <strong>"Replace the files in the destination"</strong> when prompted</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!----------------------------------------------------------------------- Footer ----------------------------------------------------------------------------->
+<div id="Footer">
+  <p class="CreditsTitle">Big thanks to</p>
+  <div class="CreditsNames">
+    <span class="CreditName">Balu'<!--'--> </span> 
+    <span class="CreditName">INFI</span>
+    <span class="CreditName">sockii</span>
+    <span class="CreditName">PNCKA_CTPOU</span>
+  </div>
+  <p class="FooterNote">for help with testing!</p>
+</div>
+</div>
 <script>
-const root = document.documentElement; 
-
-//----------------------------------------------------------------------- Header stuff ----------------------------------------------------------------------//
-const HeaderCarouselImages = [
-  "https://i.imgur.com/pw6ICsa.png",
-  "https://i.imgur.com/nltbwyR.png",
-  "https://i.imgur.com/oiRscpK.png",
-  "https://i.imgur.com/imevHef.png",
-  "https://i.imgur.com/ujZxz31.png",
-  "https://i.imgur.com/TSG0CGg.png"
+const TilesetPath = "Tileset.png";
+const CarouselImagesCount = 30;
+const CarouselImages = Array.from({length:CarouselImagesCount}, (_, i) => `Carousel images/${i + 1}.png`);
+console.log(CarouselImages);
+const CompareSlides = [
+  {dimensions: "1230x700", before: "Comparison previews/1 after.png", after: "Comparison previews/1 before.png"},
+  {dimensions: "1128x518", before: "Comparison previews/2 after.png", after: "Comparison previews/2 before.png"},
+  {dimensions: "1204x763", before: "Comparison previews/3 after.png", after: "Comparison previews/3 before.png"},
+  {dimensions: "1249x632", before: "Comparison previews/4 after.png", after: "Comparison previews/4 before.png"}
 ];
-
-for (let i = HeaderCarouselImages.length - 1; i > 0; i--) {const j = Math.floor(Math.random() * (i + 1));
-[HeaderCarouselImages[i], HeaderCarouselImages[j]] = [HeaderCarouselImages[j], HeaderCarouselImages[i]]}
-
-
-const ImageCount = 23;
-const HeaderCarouselSpeed = 50;
-const HeaderCarousel = document.getElementById('HeaderCarousel');
-const HeaderTextContainer = document.getElementById("HeaderTextContainer");
-
-let CurrentIndex = 0;
-let HeaderCarouselSpacing = 0;
-let HeaderCarouselPosition = 0;
-let HeaderCarouselSpeedScaled = HeaderCarouselSpeed/window.devicePixelRatio;
-let PrevTimestamp = null;
-
-
-(async () => {
-  const loadedImages = await Promise.all(
-    Array.from({length: ImageCount}, () => {
-      const src = HeaderCarouselImages[CurrentIndex];
-      CurrentIndex = (CurrentIndex + 1) % HeaderCarouselImages.length;
-      return new Promise(resolve => {
-        const img = new Image();
-        img.src = src;
-        img.draggable = false;
-        img.onload = img.onerror = () => resolve(img);
-      });
-    })
-  );
-loadedImages.forEach(img => HeaderCarousel.appendChild(img));
-requestAnimationFrame(() => {
-  HeaderCarousel.style.animation = "HeaderCarouselFadeIn 1.5s ease forwards";
-  setTimeout(() => {void HeaderTextContainer.offsetWidth; HeaderTextContainer.style.animation = `HeaderTextFadeIn 1.5s forwards`}, 800);
-});
-updateSizes();
-requestAnimationFrame(HeaderCarouselAnimation);
-})();
-
-
-function HeaderCarouselAnimation(Timestamp) {
-  if (!PrevTimestamp) {PrevTimestamp = Timestamp};
-  HeaderCarouselPosition -= HeaderCarouselSpeedScaled * ((Timestamp - PrevTimestamp) / 1000);
-  PrevTimestamp = Timestamp;
-  if (HeaderCarousel.children.length > 0) {
-    const FirstImageWidth = HeaderCarousel.children[0].offsetWidth + HeaderCarouselSpacing;
-    if (-HeaderCarouselPosition >= FirstImageWidth) {
-      const NewImage = HeaderCarousel.removeChild(HeaderCarousel.children[0]);
-      NewImage.src = HeaderCarouselImages[CurrentIndex];
-      CurrentIndex = (CurrentIndex + 1) % HeaderCarouselImages.length;
-      HeaderCarousel.appendChild(NewImage);
-      HeaderCarouselPosition += FirstImageWidth;
+const ColorSelectionSlides = [
+  {dimensions: "1125x715",
+    colors: {
+      "1": {before: "Color previews/Slide1/Blue1.png"  , after: "Color previews/Slide1/Blue2.png"},
+      "2": {before: "Color previews/Slide1/Purple1.png", after: "Color previews/Slide1/Purple2.png"},
+      "3": {before: "Color previews/Slide1/Red1.png"   , after: "Color previews/Slide1/Red2.png"},
+      "4": {before: "Color previews/Slide1/Brown1.png" , after: "Color previews/Slide1/Brown2.png"},
+      "5": {before: "Color previews/Slide1/Yellow1.png", after: "Color previews/Slide1/Yellow2.png"},
+      "6": {before: "Color previews/Slide1/Green1.png" , after: "Color previews/Slide1/Green2.png"},
+    }
+  },
+  {dimensions: "1125x715",
+    colors: {
+      "1": {before: "Color previews/Slide2/Blue1.png"  , after: "Color previews/Slide2/Blue2.png"},
+      "2": {before: "Color previews/Slide2/Purple1.png", after: "Color previews/Slide2/Purple2.png"},
+      "3": {before: "Color previews/Slide2/Red1.png"   , after: "Color previews/Slide2/Red2.png"},
+      "4": {before: "Color previews/Slide2/Brown1.png" , after: "Color previews/Slide2/Brown2.png"},
+      "5": {before: "Color previews/Slide2/Yellow1.png", after: "Color previews/Slide2/Yellow2.png"},
+      "6": {before: "Color previews/Slide2/Green1.png" , after: "Color previews/Slide2/Green2.png"},
     }
   }
-
-  HeaderCarousel.style.transform = `translate3d(${HeaderCarouselPosition}px,0,0)`;
-  requestAnimationFrame(HeaderCarouselAnimation);
-}
-
-
-function updateSizes() {
-  root.style.setProperty("--zoom", `${(1/(window.devicePixelRatio||1))}`);
-  HeaderCarouselSpeedScaled = HeaderCarouselSpeed/window.devicePixelRatio;
-  HeaderCarouselSpacing = parseFloat(getComputedStyle(HeaderCarousel).gap);
-};
-
-window.addEventListener("resize", () => {requestAnimationFrame(() => {updateSizes()})});
-document.addEventListener("visibilitychange", () => {PrevTimestamp = performance.now()});
-//----------------------------------------------------------------------- Header stuff ----------------------------------------------------------------------//
-
-
-//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
+];
+//---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------//
+const ImageCount = 25;
+const CarouselSpeed = 50;
+const HeaderCarousel = document.getElementById('HeaderCarousel');
+const HeaderTextContainer = document.getElementById("HeaderTextContainer");
+const shuffle = (arr)=>arr.forEach((_,i,a)=>{let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}); shuffle(CarouselImages);
+let CurrentIndex = 0, CarouselSpacing = 0, CarouselPos = 0, PrevTimestamp = null;
+(async () => {const loadedImages = await Promise.all(Array.from({length: ImageCount}, () => {const src = CarouselImages[CurrentIndex];
+CurrentIndex = (CurrentIndex + 1) % CarouselImages.length; return new Promise(resolve => {const img = new Image(); img.src = src;
+img.draggable = false; img.onload = img.onerror = () => resolve(img)})})); loadedImages.forEach(img => HeaderCarousel.appendChild(img));
+requestAnimationFrame(()=>{HeaderCarousel.style.animation = "FadeIn 1.5s ease forwards"; setTimeout(()=>{void HeaderTextContainer.offsetWidth;
+HeaderTextContainer.style.animation = `FadePosIn 1.5s forwards`}, 800)}); updateSizes(); requestAnimationFrame(HeaderCarouselAnimation)})();
+function HeaderCarouselAnimation(Timestamp) {
+if (!PrevTimestamp) {PrevTimestamp = Timestamp}; CarouselPos -= CarouselSpeed/window.devicePixelRatio*((Timestamp-PrevTimestamp)/1000);
+PrevTimestamp=Timestamp; if (HeaderCarousel.children.length>0) {const FirstImageWidth=HeaderCarousel.children[0].offsetWidth+CarouselSpacing;
+if (-CarouselPos >= FirstImageWidth) {const NewImage = HeaderCarousel.removeChild(HeaderCarousel.children[0]); NewImage.src
+= CarouselImages[CurrentIndex]; CurrentIndex = (CurrentIndex+1) % CarouselImages.length; HeaderCarousel.appendChild(NewImage); CarouselPos
++= FirstImageWidth}} HeaderCarousel.style.transform = `translate3d(${CarouselPos}px,0,0)`; requestAnimationFrame(HeaderCarouselAnimation)}
+//--------------------------------------------------------------------- BASlider stuff ----------------------------------------------------------------------//
 class BeforeAfterSlider {
-  constructor(container) {
-    this.container = container; const beforeURL = container.dataset.before, afterURL = container.dataset.after;
-    this.targetValue = 50; this.currentValue = this.targetValue; this.dragging = false; this.mouseDown = false; this.animating = false;
-    this.container.innerHTML = `<div class="img-wrapper"><img src="${beforeURL}" alt="Before"></div>
-                                    <div class="img-wrapper"><img src="${afterURL}" alt="After"></div>
-                                    <div class="line"></div><div class="handle"></div>`;
-    const [w,h] = container.dataset.dimensions.split("x").map(Number);
-    Object.assign(this.container.style, {maxWidth: `${w}px`, aspectRatio: `${w}/${h}`});
-    this.imgAfter = container.querySelector('.img-wrapper:nth-of-type(2)');
-    this.handle = container.querySelector('.handle');
-    this.line = container.querySelector('.line');
-    this.addEventListeners(); this.update();
-  };
-  addEventListeners() {
-    let DragTimeout; this.container.addEventListener('mousedown', (e) => {if (e.button !== 0) return; e.preventDefault();
-      const rect = this.container.getBoundingClientRect(); let percent = ((e.clientX-rect.left)/rect.width)*100;
-      this.targetValue = Math.max(0, Math.min(100, percent)); this.dragging = false; this.mouseDown = true;
-      clearTimeout(DragTimeout); DragTimeout = setTimeout(() => this.mouseDown && (this.dragging = true), 150); this.animate();
-    }); window.addEventListener('mouseup', () => {this.mouseDown = false; clearTimeout(DragTimeout); this.dragging = false});
-    window.addEventListener('mousemove', (e) => {if (!this.mouseDown) return; const rect = this.container.getBoundingClientRect();
-      let percent = ((e.clientX-rect.left)/rect.width)*100; this.targetValue = Math.max(0, Math.min(100, percent)); this.animate();
-    });
-  };
-  update() {
-    this.currentValue += (this.targetValue-this.currentValue)*(this.dragging?0.5:0.2);
-    this.line.style.left = `${this.currentValue}%`; this.handle.style.left = `${this.currentValue}%`;
-    this.imgAfter.style.clipPath = `inset(0 0 0 ${this.currentValue}%)`; if (Math.abs(this.currentValue-this.targetValue) > 0.1) {
-    requestAnimationFrame(() => this.update())} else {this.currentValue = this.targetValue; this.animating = false}
-  }; animate() {if (!this.animating) {this.animating = true; requestAnimationFrame(() => this.update())}};
+  constructor(container) {Object.assign(this,{container,dragging:false,mouseDown:false,animating:false,currentValue:50,targetValue: 50});
+  if (this.container.dataset.before) {this.init()}}; init() {const beforeURL = this.container.dataset.before, afterURL
+  = this.container.dataset.after,[w,h]=this.container.dataset.dimensions.split("x").map(Number);Object.assign(this.container.style
+  ,{maxWidth:`${w}px`,aspectRatio:`${w}/${h}`}); this.container.innerHTML = `<div class="img-wrapper"><img src="${beforeURL}" alt="Before" draggable
+    ="false"></div><div class="img-wrapper"><img src="${afterURL}" alt="After" draggable="false"></div><div class="line"></div><div class="handle"></div>`;
+  this.imgAfter = this.container.querySelector('.img-wrapper:nth-of-type(2)'); this.handle = this.container.querySelector('.handle'); this.line
+  =this.container.querySelector('.line'); this.addEventListeners(); this.update()} addEventListeners() {let dragTimeout;
+  this.container.addEventListener('mousedown', (e) => {if (e.button !== 0) {return}; e.preventDefault(); const rect
+  =this.container.getBoundingClientRect(); this.targetValue = Math.max(0,Math.min(100,((e.clientX-rect.left)/rect.width)
+  *100));this.mouseDown = true;this.dragging = false;clearTimeout(dragTimeout); dragTimeout = setTimeout(() => {if (this.mouseDown) {
+  this.dragging = true}},150); this.animate()}); window.addEventListener('mouseup', () => {this.mouseDown = false; this.dragging = false});
+  window.addEventListener('mousemove', (e) => {if (!this.mouseDown) {return}; const rect = this.container.getBoundingClientRect();
+  this.targetValue = Math.max(0,Math.min(100,((e.clientX-rect.left)/rect.width)*100)); this.animate()})}
+  update() {this.currentValue += (this.targetValue - this.currentValue)*(this.dragging?0.5:0.2); this.line.style.left
+  =this.handle.style.left = `${this.currentValue}%`; this.imgAfter.style.clipPath = `inset(0 0 0 ${this.currentValue}%)`;
+  if (Math.abs(this.currentValue - this.targetValue) > 0.1) requestAnimationFrame(() => this.update()); else {this.currentValue
+  =this.targetValue;this.animating=false}};animate() {if (!this.animating) {this.animating=true;requestAnimationFrame(()=>this.update())}}
+  updateImages(beforeURL, afterURL, dimensions) {
+  if (!this.line) {this.container.dataset.before = beforeURL; this.container.dataset.after = afterURL; this.container.dataset.dimensions
+  =dimensions; this.init(); return}; const [w, h] = dimensions.split("x").map(Number);Object.assign(this.container.style,{
+  maxWidth: `${w}px`,aspectRatio:`${w}/${h}`}); const beforeWrapper = this.container.querySelector('.img-wrapper:nth-of-type(1)'), afterWrapper
+  =this.container.querySelector('.img-wrapper:nth-of-type(2)');const newB=document.createElement('img'),newA=document.createElement('img');
+  newB.src=beforeURL;newA.src=afterURL;newB.draggable=newA.draggable=false;Object.assign(newB.style, {position: 'absolute', top: 0, left:0
+  , width: '100%', height: '100%', objectFit: 'cover', opacity:0, transition: 'opacity 0.5s'}); Object.assign(newA.style, {position: 'absolute'
+  , top:0, left:0, width: '100%', height: '100%', objectFit: 'cover', opacity:0, transition: 'opacity 0.5s'});beforeWrapper.appendChild(newB);
+  afterWrapper.appendChild(newA); requestAnimationFrame(() => { newB.style.opacity = 1; newA.style.opacity = 1 }); setTimeout(() => {
+  beforeWrapper.querySelector('img').src = beforeURL; afterWrapper.querySelector('img').src = afterURL; beforeWrapper.removeChild(newB);
+  afterWrapper.removeChild(newA); }, 500)}
 }
-//----------------------------------------------------------------------- Slider stuff ----------------------------------------------------------------------//
-
-
-//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
-class BASpoilerAnimator {
-  constructor(spoiler, steps) {
-    this.spoiler = spoiler; this.steps = steps; this.index = 0; this.direction = 1;
-    this.progress = 0; this.running = false; this.startTime = null; this.rafId = null;
-  };
-  step(timestamp) {
-    let step = this.steps[this.index], {start,end} = step;
-    if (this.startTime === null) {this.startTime = timestamp};
-    const frameDelta = timestamp-this.startTime; this.startTime = timestamp;
-    const delta = Math.min(frameDelta/step.duration,1)*this.direction; this.progress += delta;
-    this.progress = Math.min(1, Math.max(0, this.progress)); const value = start+(end-start)*step.easing(this.progress);
-    this.spoiler.style[step.property] = value+"px"; if ((this.progress === 1 && this.direction === 1) || (this.progress === 0
-    && this.direction === -1)) {this.index += this.direction; if (this.index < 0 || this.index >= this.steps.length) {
-    this.index = Math.max(0, Math.min(this.index, this.steps.length - 1)); this.running = false; return}
-    this.progress = this.direction === 1?0:1; this.startTime = null}; this.rafId = requestAnimationFrame(this.step.bind(this));
-  };
-  play() {if (this.running) return; if (this.rafId) cancelAnimationFrame(this.rafId);
-  this.running = true; this.startTime = null; this.rafId = requestAnimationFrame(this.step.bind(this))};
-  playOrReverse() {const atStart = this.index===0 && this.progress===0, atEnd = this.index===this.steps.length-1
-  && this.progress===1; this.direction = atStart ? 1 : atEnd ? -1 : -this.direction; if (!this.running) this.play()}
-}
-//---------------------------------------------------------------------- Spoiler stuff ----------------------------------------------------------------------//
-
-
-//------------------------------------------------------------------------ Setup stuff ----------------------------------------------------------------------//
-document.querySelectorAll(".BASlider").forEach(slider => new BeforeAfterSlider(slider));
-document.querySelectorAll(".BASpoiler").forEach(spoiler => {
-  const SlidersWrapper = spoiler.querySelector(".BASlidersWrapper");
-  const BASpoilerToggle = spoiler.querySelector(".BASpoilerToggle");
-  const BASliders = Array.from(SlidersWrapper.querySelectorAll(".BASlider"));
-  const SpoilerCSSVars = ['BASpoilerWidth','BASpoilerHeight','BASpoilerPadding','BASpoilerSideMargin','BASpoilerWrapperMargin'];
-  const SV = Object.fromEntries(SpoilerCSSVars.map(v => [v, parseInt(getComputedStyle(spoiler).getPropertyValue(`--${v}`))]));
-  const dimensions = BASliders.map(({dataset})=>dataset.dimensions.split('x').map(Number)),maxWidth = Math.max(...dimensions.map(([w])=>w));
-  const maxHeight = dimensions.reduce((sum,[,h])=>sum+h,0) + 2*(SV.BASpoilerHeight+SV.BASpoilerPadding+SV.BASpoilerWrapperMargin);
-  const Easings = {none: t => t, cubic: t => t < 0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1, quintic: t => t*t*t*(t*(6*t-15)+10)};
-  const SpoilerAnimation = new BASpoilerAnimator(spoiler, [
-    {property: "maxWidth", start: SV.BASpoilerWidth, end: maxWidth, duration: 500, easing: Easings.cubic}, // 500
-    {property:   "height", start: SV.BASpoilerHeight, end: maxHeight, duration: 700, easing: Easings.quintic} // 700
-  ]);
-  BASpoilerToggle.addEventListener("click", () => {SpoilerAnimation.playOrReverse();
-    BASpoilerToggle.textContent = BASpoilerToggle.textContent === "Show more" ? "Show less" : "Show more";
-  });
-  spoiler.querySelector(".BASpoilerCollapse").addEventListener("click", () => {
-    BASpoilerToggle.textContent = "Show more"; SpoilerAnimation.direction = -1; SpoilerAnimation.play();
+//--------------------------------------------------------------------- Slideshow stuff ---------------------------------------------------------------------//
+const activeSlideshows = {};
+function initSlideshow(wrapperId, imagesData, isColorSlideshow = false) {
+  let currentIndex = 0, currentColor = '1'; 
+  const wrapper = document.getElementById(wrapperId), sliderEl = wrapper.querySelector('.BASlider');
+  const sliderInstance = new BeforeAfterSlider(sliderEl), dotsContainer = wrapper.querySelector('.BASlideshowDots');
+  const updateSlider = () => {let data; if (isColorSlideshow) {const slide = imagesData[currentIndex], colorSet = slide.colors[currentColor];
+  data = {before: colorSet.before, after: colorSet.after, dimensions: slide.dimensions}} else {data = imagesData[currentIndex]}
+  sliderInstance.updateImages(data.before,data.after,data.dimensions)}; const updateDots = () => Array.from(dotsContainer.children).forEach((
+  dot,i) => dot.classList.toggle("active", i === currentIndex)); imagesData.forEach((_, i) => {const dot = document.createElement("div");
+  dot.className = "BASlideshowDot";  dot.addEventListener("click", () => { if(i !== currentIndex) { currentIndex = i; updateSlider();
+  updateDots()}}); dotsContainer.appendChild(dot)}); updateSlider(); updateDots(); setTimeout(() => wrapper.style.opacity = 1, 100);
+  wrapper.querySelector('.Prev').addEventListener('click', () => {currentIndex = (currentIndex-1+imagesData.length) % imagesData.length;
+  updateSlider(); updateDots()}); wrapper.querySelector('.Next').addEventListener('click', () => {
+  currentIndex = (currentIndex + 1) % imagesData.length; updateSlider(); updateDots(); });
+  activeSlideshows[wrapperId] = {setColor: (color) => {currentColor = color;updateSlider()}};
+}; initSlideshow('Section1', CompareSlides, false); initSlideshow('Section2', ColorSelectionSlides, true);
+//---------------------------------------------------------------------- Setup stuff ------------------------------------------------------------------------//
+document.querySelectorAll('.ColorSwatch').forEach(swatch => {
+  swatch.addEventListener('click', () => {document.querySelectorAll('.ColorSwatch').forEach(s => s.classList.remove('active')); 
+  swatch.classList.add('active'); const color = swatch.getAttribute('data-color');
+  if (activeSlideshows['Section2']) {activeSlideshows['Section2'].setColor(color)}});
+});
+function updateSizes() {document.documentElement.style.setProperty("--zoom", `${(1/(window.devicePixelRatio||1))}`);
+                        if (HeaderCarousel) CarouselSpacing = parseFloat(getComputedStyle(HeaderCarousel).gap)};
+//---------------------------------------------------------------- Engine & Download Logic ------------------------------------------------------------------//
+const DownloadButton = document.getElementById('DownloadButton');
+document.querySelectorAll('input[name="rendering_engine"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    if (radio.checked) {DownloadButton.disabled = false; DownloadButton.classList.add('enabled'); DownloadButton.innerText = "DOWNLOAD"}
   });
 });
-//------------------------------------------------------------------------ Setup stuff ----------------------------------------------------------------------//
+function TileFromTileset(Zip, Tile, Size, FolderName, FileName) {
+  return new Promise((resolve) => {
+    const img = new Image(); img.src = TilesetPath; img.crossOrigin = "anonymous"; img.onload = function() {
+    const canvas = document.createElement('canvas'); canvas.width = Size; canvas.height = Size; const ctx = canvas.getContext('2d');
+    ctx.drawImage(img,(Tile%(img.width/64))*64,Math.floor(Tile/(img.width/64))*64,Size,Size,0,0,Size,Size);
+    canvas.toBlob((blob) => {Zip.folder(FolderName).file(FileName, blob); resolve()}, "image/png")}
+  });
+};
+function TilesetFromJSON(Zip, JSON, Size, FolderName, FileName) {
+  return new Promise((resolve, reject) => {try {
+    const Tiles = JSON.Tiles, renderCanvas = document.createElement('canvas'); renderCanvas.width = Size; renderCanvas.height = Size;
+    const ctx = renderCanvas.getContext('2d'), img = new Image(); img.src = TilesetPath; img.crossOrigin = "anonymous";
+    img.onload = () => {for (const [key, id] of Object.entries(Tiles)) {const [tx,ty] = key.split(',').map(Number);
+    ctx.drawImage(img,(id%(img.width/64))*64,Math.floor(id/(img.width/64))*64,64,64,tx*64,ty*64,64,64)}
+    renderCanvas.toBlob((blob) => {if (blob) {Zip.folder(FolderName).file(FileName, blob); resolve()} else {reject("Blob creation failed")}}
+    ,'image/png')}; img.onerror = () => reject("Failed to load tileset image")} catch (e) {reject("Invalid JSON: " + e.message)}
+  });
+};
+DownloadButton.addEventListener('click', async () => {
+  if (DownloadButton.disabled) {return};
+  const engine = document.querySelector('input[name="rendering_engine"]:checked').value;
+  const SelectedColor = parseInt(document.querySelector('.ColorSwatch.active').getAttribute('data-color'));
+  const ReplaceGuiCursor = GuiCursorToggle.checked;
+  const ReplaceEditorCursors = EditorCursorsToggle.checked;
+  const ReplaceEditorCheckerboard = EditorCheckerboardToggle.checked
+  const CheckpointTile = (engine === "opengl") ? 29 : 256, HookableTile = 287 + SelectedColor;
+  const ddnetJSON = {"tiles":{"1,0":HookableTile,"2,0":2,"3,0":3,"4,0":4,"5,0":5,"6,0":6,"7,0":7,"8,0":8,"9,0":9,"10,0":10,"11,0":11,"12,0":12
+                   ,"13,0":13,"14,0":14,"15,0":15,"0,1":16,"1,1":17,"2,1":18,"3,1":19,"4,1":20,"5,1":21,"6,1":22,"7,1":23,"8,1":24,"9,1":25
+                   ,"10,1":26,"11,1":27,"13,1":CheckpointTile,"14,1":30,"15,1":31,"0,2":32,"1,2":33,"2,2":34,"3,2":35,"4,2":36,"5,2":37,"6,2":38
+                   ,"7,2":39,"8,2":40,"9,2":41,"10,2":42,"11,2":43,"12,2":44,"13,2":45,"14,2":46,"15,2":47,"0,3":48,"1,3":49,"2,3":50,"3,3":51
+                   ,"4,3":52,"5,3":53,"6,3":54,"7,3":55,"8,3":56,"9,3":57,"10,3":58,"12,3":60,"13,3":61,"14,3":62,"15,3":63,"0,4":64,"1,4":65
+                   ,"2,4":66,"3,4":67,"4,4":68,"12,4":76,"11,5":91,"10,5":90,"9,5":89,"8,5":88,"8,6":104,"9,6":105,"10,6":106,"11,6":107,"0,6":96
+                   ,"0,7":112,"0,8":128,"0,9":144,"1,9":145,"1,8":129,"1,7":113,"1,6":97,"2,6":98,"3,6":99,"15,9":159,"14,9":158,"13,9":157
+                   ,"12,9":156,"11,9":155,"10,9":154,"15,10":175,"14,10":174,"13,10":173,"12,10":172,"11,10":171,"10,10":170,"15,11":191,"0,12":192
+                   ,"0,14":224,"1,14":225,"15,13":271,"14,13":270,"13,13":269,"12,13":268}};
+  const frontJSON = {"tiles":{"2,0":2,"4,0":4,"5,0":5,"6,0":6,"9,0":9,"11,0":11,"12,0":12,"13,0":13,"0,1":16,"1,1":17,"2,1":18,"3,1":19,"4,1":20
+                   ,"5,1":21,"6,1":22,"0,2":32,"1,2":33,"2,2":34,"3,2":355,"4,2":356,"5,2":357,"6,2":358,"7,2":359,"8,2":360,"9,2":361,"10,2":362
+                   ,"11,2":363,"12,2":364,"13,2":365,"14,2":366,"15,2":367,"0,3":368,"1,3":369,"2,3":370,"3,3":371,"4,3":372,"5,3":373,"6,3":374
+                   ,"7,3":375,"8,3":376,"9,3":377,"10,3":378,"12,3":60,"13,3":61,"14,3":62,"0,4":64,"1,4":65,"3,4":67,"12,4":76,"11,5":91,"11,6":107
+                   ,"10,5":90,"9,5":89,"8,5":88,"8,6":104,"9,6":105,"10,6":106,"0,6":96,"1,6":97,"1,7":113,"0,7":112,"0,8":128,"1,8":129,"2,6":98
+                   ,"3,6":99,"15,9":159,"14,9":158,"13,9":157,"12,9":156,"11,9":155,"10,9":154,"15,10":175,"14,10":174,"13,10":173,"12,10":172
+                   ,"11,10":171,"10,10":170,"15,12":207,"14,12":206,"13,12":205,"12,12":204,"11,12":203,"10,12":202,"9,12":201,"8,12":200,"7,12":199
+                   ,"6,12":198,"5,12":197,"0,12":192,"15,13":223,"14,13":222,"13,13":221,"12,13":220,"10,13":218,"9,13":217,"8,13":216,"7,13":215
+                   ,"6,13":214,"5,13":213,"4,13":212,"3,13":211,"2,13":210,"1,13":209,"0,13":208,"0,14":224,"1,14":225,"0,15":240,"15,11":191
+                   ,"14,14":238,"13,14":237,"12,14":236,"11,14":235,"10,14":234,"9,14":233,"2,14":226,"3,14":227,"4,14":228,"5,14":229,"0,9":144
+                   ,"1,9":145,"2,4":66}}
+  const speedupJSON = {"tiles":{"15,9":159,"14,9":158,"13,9":157,"12,9":156,"11,9":155,"10,9":154,"15,10":175,"14,10":174,"13,10":173,"12,10":172
+                     ,"11,10":171,"10,10":170,"12,1":383}};
+  const switchJSON = {"tiles":{"15,9":159,"14,9":158,"13,9":157,"12,9":156,"11,9":155,"10,9":154,"15,10":175,"14,10":174,"13,10":173,"12,10":172
+                    ,"11,10":171,"10,10":170,"2,6":98,"3,6":99,"0,12":192,"0,13":208,"1,13":209,"2,13":210,"3,13":211,"4,13":212,"5,13":213
+                    ,"6,13":214,"7,13":215,"8,13":216,"9,13":217,"10,13":218,"12,13":220,"13,13":221,"14,13":222,"15,13":223,"15,12":207,"14,12":206
+                    ,"13,12":205,"12,12":204,"11,12":203,"10,12":202,"9,12":201,"8,12":200,"7,12":199,"6,12":198,"5,12":197,"0,14":224,"1,14":225
+                    ,"2,14":226,"3,14":227,"4,14":228,"5,14":229,"9,14":233,"10,14":234,"11,14":235,"12,14":236,"13,14":237,"14,14":238,"0,15":240
+                    ,"12,0":12,"13,0":13,"9,0":9,"7,0":7,"7,1":23,"6,1":8,"8,1":24,"9,1":25,"3,1":19,"4,1":20,"0,9":144,"1,9":145}};
+  const teleJSON = {"tiles":{"15,0":15,"14,0":14,"14,1":30,"15,1":31,"15,3":63,"11,1":27,"13,1":CheckpointTile,"10,0":10,"10,1":26
+                  ,"15,9":159,"14,9":158,"13,9":157,"12,9":156,"11,9":155,"10,9":154,"15,10":175,"14,10":174,"13,10":173,"12,10":172
+                  ,"11,10":171,"10,10":170}};
+  const tuneJSON = {"tiles":{"4,4": 353,"15,9":175,"14,9":174,"13,9":173,"12,9":172,"11,9":171,"10,9":170,"10,8":154,"11,8":155,"12,8":156
+                  ,"13,8":157,"14,8":158,"15,8":159}};
+  const DDNetJSON = {"tiles":{"1,0":HookableTile,"2,0":2,"3,0":3,"4,0":4,"5,0":5,"6,0":6,"9,0":9,"11,0":11,"12,0":12,"13,0":13,"0,1":16,"1,1":17
+                   ,"2,1":18,"3,1":19,"4,1":20,"5,1":21,"6,1":22,"0,2":32,"1,2":33,"2,2":34,"3,2":355,"4,2":356,"5,2":357,"6,2":358,"7,2":359
+                   ,"8,2":360,"9,2":361,"10,2":362,"11,2":363,"12,2":364,"13,2":365,"14,2":366,"15,2":367,"0,3":368,"1,3":369,"2,3":370,"3,3":371
+                   ,"4,3":372,"5,3":373,"6,3":374,"7,3":375,"8,3":376,"9,3":377,"10,3":378,"12,3":60,"13,3":61,"14,3":62,"12,4":76,"0,4":64
+                   ,"1,4":65,"2,4":66,"3,4":67,"11,5":91,"10,5":90,"9,5":89,"8,5":88,"11,6":107,"10,6":106,"9,6":105,"8,6":104,"0,6":96,"1,6":97
+                   ,"0,7":112,"1,7":113,"0,8":128,"1,8":129,"0,9":144,"1,9":145,"15,9":159,"14,9":158,"13,9":157,"12,9":156,"11,9":155,"10,9":154
+                   ,"15,10":175,"14,10":174,"13,10":173,"12,10":172,"11,10":171,"10,10":170,"15,11":191,"0,12":192,"15,12":207,"14,12":206
+                   ,"13,12":205,"12,12":204,"11,12":203,"10,12":202,"9,12":201,"8,12":200,"7,12":199,"6,12":198,"5,12":197,"0,13":208,"1,13":209
+                   ,"2,13":210,"3,13":211,"4,13":212,"5,13":213,"6,13":214,"7,13":215,"8,13":216,"9,13":217,"10,13":218,"12,13":220,"13,13":221
+                   ,"14,13":222,"15,13":223,"0,14":224,"1,14":225,"2,14":226,"3,14":227,"4,14":228,"5,14":229,"9,14":233,"10,14":234,"11,14":235
+                   ,"12,14":236,"13,14":237,"14,14":238,"0,15":240}};
+  const Zip = new JSZip(), tasks = []; DownloadButton.innerText = "DOWNLOADING..."; DownloadButton.disabled = true;
+  if (ReplaceGuiCursor) {tasks.push(TileFromTileset(Zip, 352, 64, "data", "gui_cursor.png"))}
+  if (ReplaceEditorCursors) {
+    tasks.push(TileFromTileset(Zip, 379, 64, "data/editor", "cursor.png"));
+    tasks.push(TileFromTileset(Zip, 380, 64, "data/editor", "cursor_resize.png"));
+  }
+  if (ReplaceEditorCheckerboard) {tasks.push(TileFromTileset(Zip, 381, 32, "data/editor", "checker.png"))}
+  tasks.push(
+    TileFromTileset(Zip, 382, 64, "data/editor", "speed_arrow.png"),
+    TilesetFromJSON(Zip,   DDNetJSON, 1024, "data/editor/entities", "DDNet.png"),
+    TilesetFromJSON(Zip,   ddnetJSON, 1024, "data/editor/entities_clear", "ddnet.png"),
+    TilesetFromJSON(Zip,   frontJSON, 1024, "data/editor", "front.png"),
+    TilesetFromJSON(Zip, speedupJSON, 1024, "data/editor", "speedup.png"),
+    TilesetFromJSON(Zip,  switchJSON, 1024, "data/editor", "switch.png"),
+    TilesetFromJSON(Zip,    teleJSON, 1024, "data/editor", "tele.png"),
+    TilesetFromJSON(Zip,    tuneJSON, 1024, "data/editor", "tune.png")
+  );
+  try {await Promise.all(tasks); const content = await Zip.generateAsync({type: "blob"}), link = document.createElement('a');
+  link.href = URL.createObjectURL(content); link.download = "Entities by MiM.zip"; document.body.appendChild(link); link.click();
+  document.body.removeChild(link)} catch (error) {console.error("Error creating ZIP:", error); alert("Failed to generate ZIP file.");
+  } finally {DownloadButton.disabled = false; DownloadButton.innerText = "DOWNLOAD"}
+});
+window.addEventListener("resize", () => requestAnimationFrame(updateSizes)); 
+document.addEventListener("visibilitychange", () => {PrevTimestamp = performance.now()});
 </script>
 </body>
 </html>
