@@ -1,1 +1,1 @@
-https://whymim.github.io/Temp/
+https://whymim.github.io/entities
