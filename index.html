@@ -7,6 +7,7 @@
 @font-face {font-family: 'Rubik'; src: url('fonts/Rubik-VariableFont_wght.ttf') format('truetype-variations'); font-weight: 300 900; font-style: normal}
 :root {--BackgroundColor: #222; --HorizontalPadding: 22px}
 * {color: white; -webkit-user-drag: none; -moz-user-drag: none; -ms-user-drag: none; user-drag: none; user-select: none}
+html, body {-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none}
 body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--HorizontalPadding); padding-right: var(--HorizontalPadding)}
 body::-webkit-scrollbar {background-color: transparent; width: calc(12px*var(--zoom))}
 body::-webkit-scrollbar-thumb {background-color: #bababa; border: none; border-radius: 0px}
@@ -199,11 +200,29 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
 #DownloadButton.enabled {background: #31557d; color: #fff; cursor: pointer; box-shadow: 0 0 calc(15px*var(--zoom)) rgba(0,0,0,0.3)}
 #DownloadButton.enabled:hover {filter: brightness(120%)} #DownloadButton.enabled:active {filter: brightness(90%)}
 /*--------------------------------------------------------------------- Install stuff -----------------------------------------------------------------------*/
-.StepContainer.install {border-width: calc(2px * var(--zoom)); border-color: rgba(255, 255, 255, 0.2); margin-bottom: calc(30px * var(--zoom))}
-.StepContainer.install h3 {margin-top: calc(5px * var(--zoom)); margin-bottom: calc(6px * var(--zoom));}
+.StepContainer.install {border-width: calc(2px * var(--zoom)); border-color: rgba(255, 255, 255, 0.2); padding-bottom: calc(5px*var(--zoom))}
+.StepContainer.install h3 {margin-bottom: calc(2px * var(--zoom));}
 .InstallSteps {display: inline-block; margin-top: calc(10px * var(--zoom))}
 .InstallSteps p {margin-bottom: calc(12px * var(--zoom)) !important; color: rgba(255, 255, 255, 0.8) !important}
 .InstallSteps code {background: #666; padding: calc(3px*var(--zoom)); border-radius: calc(3px*var(--zoom))}
+
+/*---------------------------------------------------------------------- Extra stuff ------------------------------------------------------------------------*/
+.StepContainer.extra {margin-bottom: calc(30px * var(--zoom))}
+.StepContainer.extra h3 {margin-top: calc(-14px*var(--zoom)); margin-bottom: calc(14px*var(--zoom))}
+.ExtraSteps {display: inline-block; margin-top: calc(10px * var(--zoom))}
+.ExtraSteps p {margin-bottom: calc(12px * var(--zoom)) !important; color: rgba(255, 255, 255, 0.8) !important}
+.ExtraSteps *::selection {background: transparent !important}
+
+.copy-box {
+  contain: paint; user-select: text !important; -webkit-user-select: text !important; cursor: text;
+  display: inline-block; background: #4a4a4a; color: #fff; padding: calc(1px * var(--zoom)) calc(8px * var(--zoom));
+  font-family: "Consolas"; font-size: calc(14px*var(--zoom)); border-radius: calc(4px * var(--zoom));
+}
+.copy-box.is-selecting::selection {background: #999999 !important; color: #fff !important}
+
+
+
+
 /*---------------------------------------------------------------------- Footer stuff -----------------------------------------------------------------------*/
 #Footer p {margin: 0; font-size: calc(14px*var(--zoom)); line-height: 1.8}
 #Footer {
@@ -319,6 +338,18 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
         <p>1. <strong>Unpack</strong> the downloaded ZIP file</p>
         <p>2. <strong>Drag</strong> the unpacked <code>data</code> folder onto your client folder</p>
         <p>3. Select <strong>"Replace the files in the destination"</strong> when prompted</p>
+      </div>
+    </div>
+    <!-- Extra -->
+    <div class="StepContainer extra">
+      <div class="ExtraSteps">
+        <h3>Extra stuff</h3>
+        <p>I recommend <span class="copy-box" onclick="selectText(this)">cl_background_entities_color 9858903</span>
+        <strong>(remember to save your current background)</strong> but these entities should look ok on most backgrounds.</p>
+
+        <p><span class="copy-box" onclick="selectText(this)">bind mouse3 "toggle cl_text_entities 0 1"</span> clicking middle mouse will toggle
+        text on stuff like teleports/speedups/switches, most of the time you don't<!--'--> need to see them to understand parts.
+        Adjust <span class="copy-box" onclick="selectText(this)">cl_text_entities_size</span> to your liking.</p>
       </div>
     </div>
   </div>
@@ -540,6 +571,21 @@ DownloadButton.addEventListener('click', async () => {
   document.body.removeChild(link)} catch (error) {console.error("Error creating ZIP:", error); alert("Failed to generate ZIP file.");
   } finally {DownloadButton.disabled = false; DownloadButton.innerText = "DOWNLOAD"}
 });
+
+document.addEventListener('mousedown', (e) => {if (e.button === 0 && !e.target.closest('code')) {window.getSelection().removeAllRanges()}});
+window.addEventListener('keydown', function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.keyCode === 65) {if (e.target.tagName!=='INPUT' && e.target.tagName!=='TEXTAREA') {e.preventDefault()}}
+});
+document.querySelectorAll('.copy-box').forEach(box => {
+  const selectContent = (element) => {const selection = window.getSelection(), range = document.createRange();
+  range.selectNodeContents(element); selection.removeAllRanges(); selection.addRange(range)};
+  box.addEventListener('click', function() {this.classList.add('is-selecting')});
+  box.addEventListener('dblclick', function(e) {selectContent(this); e.preventDefault()});
+  box.addEventListener('mousedown', function() {
+    document.querySelectorAll('.copy-box').forEach(b => b.classList.remove('is-selecting')); this.classList.add('is-selecting');
+  });
+});
+
 window.addEventListener("resize", () => requestAnimationFrame(updateSizes)); 
 document.addEventListener("visibilitychange", () => {PrevTimestamp = performance.now()});
 </script>
