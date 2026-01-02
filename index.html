@@ -31,6 +31,7 @@ body::-webkit-scrollbar-thumb:active {background-color: #9d9d9d}
 .loader {border: calc(10px*var(--zoom)) solid #393939; border-top: calc(10px*var(--zoom)) solid #bababa; border-radius: 50%;
   width: calc(50px*var(--zoom)); height: calc(50px*var(--zoom)); animation: Spin 1s linear infinite; margin-bottom: calc(30px*var(--zoom));
 }
+#LoadStatus {font-family: sans-serif; font-size: calc(18px * var(--zoom)); color: #fff; margin-top: calc(-12px*var(--zoom));text-align: center}
 /*---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------*/
 #HeaderContainer {overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;
   box-sizing: border-box; background-color: #31557d; border: 0 solid RGBA(255, 255, 255, 0.1); border-width: calc(8px*var(--zoom)) 0;
@@ -247,7 +248,7 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
 </style>
 </head>
 <body>
-<div id="LoadingScreen"><div class="loader"></div></div>
+<div id="LoadingScreen"><div class="loader"></div><div id="LoadStatus">0% (0/0)</div></div>
 <!------------------------------------------------------------------------- Header --------------------------------------------------------------------------->
 <div id="HeaderContainer">
   <div id="HeaderCarouselContainer"><div id="HeaderCarousel"></div></div>
@@ -419,10 +420,21 @@ const shuffle = (arr)=>arr.forEach((_,i,a)=>{let j=Math.floor(Math.random()*(i+1
 let CurrentIndex = 0, CarouselSpacing = 0, CarouselPos = 0, PrevTimestamp = null;
 async function preloadAllImages() {
   const allImages = [TilesetPath, ...CarouselImages, ...CompareSlides.flatMap(s => [s.before, s.after]), ...ColorSelectionSlides.flatMap(s => 
-  Object.values(s.colors).flatMap(c => [c.before, c.after])), "Engine previews/Stripes aligned.png", "Engine previews/Stripes not aligned.png",
-  "Extras previews/Gui cursor before.png", "Extras previews/Gui cursor after.png", "Extras previews/Editor cursors before.png",
-  "Extras previews/Editor cursors after.png", "Extras previews/Editor checkerboard before.png", "Extras previews/Editor checkerboard after.png"];
-  const loadImg = (src) => new Promise(resolve => {const img = new Image(); img.src = src; img.onload = img.onerror = resolve});
+    Object.values(s.colors).flatMap(c => [c.before, c.after])), 
+    "Engine previews/Stripes aligned.png", "Engine previews/Stripes not aligned.png",
+    "Extras previews/Gui cursor before.png", "Extras previews/Gui cursor after.png", 
+    "Extras previews/Editor cursors before.png", "Extras previews/Editor cursors after.png", 
+    "Extras previews/Editor checkerboard before.png", "Extras previews/Editor checkerboard after.png"
+  ];
+  const statusElement = document.getElementById('LoadStatus'), total = allImages.length; let loadedCount = 0;
+  if (statusElement) statusElement.innerText = `0% (0/${total})`;
+  const loadImg = (src) => new Promise(resolve => {
+    const img = new Image(); img.src = src;
+    img.onload = img.onerror = () => {
+      loadedCount++; const progress = Math.round((loadedCount / total) * 100);
+      if (statusElement) {statusElement.innerText = `${progress}% (${loadedCount}/${total})`}; resolve();
+    };
+  });
   await Promise.all(allImages.map(loadImg));
 }
 (async () => {
