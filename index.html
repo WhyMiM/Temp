@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en"><link rel="icon" type="image/png" href="Favicon.png">
 <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Entities by MiM</title><script data-goatcounter="https://whymim.goatcounter.com/count"async src="//gc.zgo.at/count.js"></script>
+<title>Entities by MiM</title>
+<script data-goatcounter="https://whymim.goatcounter.com/count"async src="//gc.zgo.at/count.js"></script>
 <script src="jszip.min.js"></script><script>document.documentElement.style.setProperty('--zoom',(1/(window.devicePixelRatio||1)))</script>
 <style>
 @font-face {font-family: 'Rubik'; src: url('fonts/Rubik-VariableFont_wght.ttf') format('truetype-variations'); font-weight: 300 900; font-style: normal}
-:root {--BackgroundColor: #222; --HorizontalPadding: 22px}
+:root {--HorizontalPadding: 22px}
 * {color: white; -webkit-user-drag: none; -moz-user-drag: none; -ms-user-drag: none; user-drag: none; user-select: none}
 html, body {-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none}
-body {margin: 0; background-color: var(--BackgroundColor); padding-left: var(--HorizontalPadding); padding-right: var(--HorizontalPadding)}
+body {overflow: hidden; margin: 0; background-color: #222; padding-left: var(--HorizontalPadding); padding-right: var(--HorizontalPadding)}
+html {scrollbar-gutter: stable}
 body::-webkit-scrollbar {background-color: transparent; width: calc(12px*var(--zoom))}
 body::-webkit-scrollbar-thumb {background-color: #bababa; border: none; border-radius: 0px}
 body::-webkit-scrollbar-thumb:hover {background-color: #afafaf}
 body::-webkit-scrollbar-thumb:active {background-color: #9d9d9d}
+@keyframes Spin {0% { transform: rotate(0deg)} 100% { transform: rotate(360deg)}}
 @keyframes FadeIn {from {opacity: 0} to {opacity: 1}}
 @keyframes FadePosIn {
   from {opacity: 0; transform: translateY(calc(5px*var(--zoom)))} to {opacity: 1; transform: translateY(calc(-5px*var(--zoom)))}
+}
+/*--------------------------------------------------------------------- Loading screen ----------------------------------------------------------------------*/
+#HeaderContainer, .SectionWrapper, #InstructionsContainer, #Footer {opacity: 0} .visible {animation: FadeIn 1.5s ease forwards}
+#LoadingScreen {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #222222; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; z-index: 10; color: white; font-family: sans-serif;
+  font-weight: 700; font-size: calc(20px*var(--zoom)); transition: opacity 0.8s ease; opacity: 1;
+}
+#LoadingScreen.fade-out {opacity: 0; pointer-events: none}
+.loader {border: calc(10px*var(--zoom)) solid #393939; border-top: calc(10px*var(--zoom)) solid #bababa; border-radius: 50%;
+  width: calc(50px*var(--zoom)); height: calc(50px*var(--zoom)); animation: Spin 1s linear infinite; margin-bottom: calc(30px*var(--zoom));
 }
 /*---------------------------------------------------------------------- Header stuff -----------------------------------------------------------------------*/
 #HeaderContainer {overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -207,21 +221,17 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
 .InstallSteps code {background: #666; padding: calc(3px*var(--zoom)); border-radius: calc(3px*var(--zoom))}
 
 /*---------------------------------------------------------------------- Extra stuff ------------------------------------------------------------------------*/
-.StepContainer.extra {margin-bottom: calc(30px * var(--zoom))}
+.StepContainer.extra {margin-bottom: calc(10px * var(--zoom))}
 .StepContainer.extra h3 {margin-top: calc(-14px*var(--zoom)); margin-bottom: calc(14px*var(--zoom))}
 .ExtraSteps {display: inline-block; margin-top: calc(10px * var(--zoom))}
 .ExtraSteps p {margin-bottom: calc(12px * var(--zoom)) !important; color: rgba(255, 255, 255, 0.8) !important}
 .ExtraSteps *::selection {background: transparent !important}
-
 .copy-box {
   contain: paint; user-select: text !important; -webkit-user-select: text !important; cursor: text;
   display: inline-block; background: #4a4a4a; color: #fff; padding: calc(1px * var(--zoom)) calc(8px * var(--zoom));
   font-family: "Consolas"; font-size: calc(14px*var(--zoom)); border-radius: calc(4px * var(--zoom));
 }
 .copy-box.is-selecting::selection {background: #999999 !important; color: #fff !important}
-
-
-
 
 /*---------------------------------------------------------------------- Footer stuff -----------------------------------------------------------------------*/
 #Footer p {margin: 0; font-size: calc(14px*var(--zoom)); line-height: 1.8}
@@ -237,6 +247,7 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
 </style>
 </head>
 <body>
+<div id="LoadingScreen"><div class="loader"></div></div>
 <!------------------------------------------------------------------------- Header --------------------------------------------------------------------------->
 <div id="HeaderContainer">
   <div id="HeaderCarouselContainer"><div id="HeaderCarousel"></div></div>
@@ -338,6 +349,7 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
         <p>1. <strong>Unpack</strong> the downloaded ZIP file</p>
         <p>2. <strong>Drag</strong> the unpacked <code>data</code> folder onto your client folder</p>
         <p>3. Select <strong>"Replace the files in the destination"</strong> when prompted</p>
+        <p>4. In client <code>Settings > Assets > Entities</code> make sure <strong>default</strong> is selected</p>
       </div>
     </div>
     <!-- Extra -->
@@ -405,11 +417,27 @@ const HeaderCarousel = document.getElementById('HeaderCarousel');
 const HeaderTextContainer = document.getElementById("HeaderTextContainer");
 const shuffle = (arr)=>arr.forEach((_,i,a)=>{let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}); shuffle(CarouselImages);
 let CurrentIndex = 0, CarouselSpacing = 0, CarouselPos = 0, PrevTimestamp = null;
-(async () => {const loadedImages = await Promise.all(Array.from({length: ImageCount}, () => {const src = CarouselImages[CurrentIndex];
-CurrentIndex = (CurrentIndex + 1) % CarouselImages.length; return new Promise(resolve => {const img = new Image(); img.src = src;
-img.draggable = false; img.onload = img.onerror = () => resolve(img)})})); loadedImages.forEach(img => HeaderCarousel.appendChild(img));
-requestAnimationFrame(()=>{HeaderCarousel.style.animation = "FadeIn 1.5s ease forwards"; setTimeout(()=>{void HeaderTextContainer.offsetWidth;
-HeaderTextContainer.style.animation = `FadePosIn 1.5s forwards`}, 800)}); updateSizes(); requestAnimationFrame(HeaderCarouselAnimation)})();
+async function preloadAllImages() {
+  const allImages = [TilesetPath, ...CarouselImages, ...CompareSlides.flatMap(s => [s.before, s.after]), ...ColorSelectionSlides.flatMap(s => 
+  Object.values(s.colors).flatMap(c => [c.before, c.after])), "Engine previews/Stripes aligned.png", "Engine previews/Stripes not aligned.png",
+  "Extras previews/Gui cursor before.png", "Extras previews/Gui cursor after.png", "Extras previews/Editor cursors before.png",
+  "Extras previews/Editor cursors after.png", "Extras previews/Editor checkerboard before.png", "Extras previews/Editor checkerboard after.png"];
+  const loadImg = (src) => new Promise(resolve => {const img = new Image(); img.src = src; img.onload = img.onerror = resolve});
+  await Promise.all(allImages.map(loadImg));
+}
+(async () => {
+  const LoadStartTime = Date.now(), MinLoadTime = 100; await preloadAllImages(); 
+  const remainingTime = Math.max(0, MinLoadTime - (Date.now() - LoadStartTime));
+  await new Promise(res => setTimeout(res, remainingTime));
+  const loader = document.getElementById('LoadingScreen'); loader.classList.add('fade-out');
+  setTimeout(() => {loader.style.display = 'none'}, 800);document.body.style.overflow = 'auto';
+  document.querySelectorAll('#HeaderContainer, .SectionWrapper, #InstructionsContainer, #Footer').forEach(el => el.classList.add('visible'));
+  const loadedImages = await Promise.all(Array.from({length: ImageCount}, () => { const src = CarouselImages[CurrentIndex];
+  CurrentIndex = (CurrentIndex + 1) % CarouselImages.length; return new Promise(resolve => {const img = new Image(); img.src = src;
+  img.draggable = false; img.onload = img.onerror = () => resolve(img)})})); loadedImages.forEach(img => HeaderCarousel.appendChild(img));
+  requestAnimationFrame(()=>{HeaderCarousel.style.animation = "FadeIn 1.5s ease forwards";setTimeout(()=>{void HeaderTextContainer.offsetWidth;
+  HeaderTextContainer.style.animation = `FadePosIn 1.5s forwards`}, 800)}); updateSizes(); requestAnimationFrame(HeaderCarouselAnimation);
+})();
 function HeaderCarouselAnimation(Timestamp) {
 if (!PrevTimestamp) {PrevTimestamp = Timestamp}; CarouselPos -= CarouselSpeed/window.devicePixelRatio*((Timestamp-PrevTimestamp)/1000);
 PrevTimestamp=Timestamp; if (HeaderCarousel.children.length>0) {const FirstImageWidth=HeaderCarousel.children[0].offsetWidth+CarouselSpacing;
