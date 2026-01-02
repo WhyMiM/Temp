@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
-<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Entities by MiM</title>
+<html lang="en"><link rel="icon" type="image/png" href="Favicon.png">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Entities by MiM</title><script data-goatcounter="https://whymim.goatcounter.com/count"async src="//gc.zgo.at/count.js"></script>
 <script src="jszip.min.js"></script><script>document.documentElement.style.setProperty('--zoom',(1/(window.devicePixelRatio||1)))</script>
 <style>
 @font-face {font-family: 'Rubik'; src: url('fonts/Rubik-VariableFont_wght.ttf') format('truetype-variations'); font-weight: 300 900; font-style: normal}
@@ -309,7 +310,8 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
       </div>
     </div>
     <!-- Download -->
-    <button id="DownloadButton" disabled>Please select the rendering engine!</button>
+    <button id="DownloadButton" disabled data-goatcounter-click="entities-download"
+    data-goatcounter-title="Download event">Please select the rendering engine!</button>
     <!-- Install instructions -->
     <div class="StepContainer install">
       <h3>How to install</h3>
@@ -337,6 +339,7 @@ input:checked + .SliderRound {background-color: #31557d} input:checked + .Slider
 const TilesetPath = "Tileset.png";
 const CarouselImagesCount = 30;
 const CarouselImages = Array.from({length:CarouselImagesCount}, (_, i) => `Carousel images/${i + 1}.png`);
+console.log(CarouselImages);
 const CompareSlides = [
   {dimensions: "1230x700", before: "Comparison previews/1 after.png", after: "Comparison previews/1 before.png"},
   {dimensions: "1128x518", before: "Comparison previews/2 after.png", after: "Comparison previews/2 before.png"},
